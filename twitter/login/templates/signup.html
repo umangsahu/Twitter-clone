@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Signup{% endblock %}
+
+{% block content %}
+
+<form id="signup-form">
+
+    <div class="input-wrapper">
+        <div class="input-container">
+            <label for="first-name">First Name</label>
+            <input type="text" id="first-name" placeholder="First Name">
+        </div>
+        <div class="input-container">
+            <label for="last-name">Last Name</label>
+            <input type="text" id="last-name" placeholder="Last Name">
+        </div>
+    </div>
+
+    <div>
+        <div class="input-container">
+            <label for="gender">Gender</label>
+            <input type="text" id="gender" placeholder="Gender">
+        </div>
+
+        <div class="input-wrapper">
+            <div class="input-container">
+                <label for="country-code">Country code</label>
+                <input type="text" id="country-code" placeholder="Country Code">
+            </div>
+            <div class="input-container">
+                <label for="mobile-no">phone number</label>
+                <input type="tel" id="mobile-no" placeholder="Mobile No">
+            </div>
+
+        </div>
+    </div>
+    <div class="input-container">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Email">
+    </div>
+
+    <div class="input-wrapper">
+        <div class="input-container">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Password">
+        </div>
+        <div class="input-container">
+            <label for="password_confirm">Confirm Password</label>
+            <input type="password" id="password_confirm" placeholder="Confirm Password">
+        </div>
+    </div>
+
+    <div class="button-wrapper">
+        <button type="submit">Signup</button>
+    </div>
+
+</form>
+<hr id="hr-tag">
+
+<p>Already have an account?</p>
+<div class="anchor-wrapper">
+    <a href='{% url "login_page" %}'>login</a>
+</div>
+<script>
+    document.getElementById('signup-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the form from submitting the traditional way
+        const formData = {
+            // username: document.getElementById('username').value,
+            first_name: document.getElementById('first-name').value,
+            last_name: document.getElementById('last-name').value,
+            gender: document.getElementById('gender').value,
+            country_code: document.getElementById('country-code').value,
+            mobile_no: document.getElementById('mobile-no').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            password_confirm: document.getElementById('password_confirm').value
+        };
+        console.log(formData);
+
+        fetch('{% url "signup_view" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect or show success message
+                    // window.location.href = data.redirect_url;
+                    console.log("success");
+                } else {
+                    // Show error message
+                    console.error('Error:', data.error);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+{% endblock %}
