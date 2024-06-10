@@ -12,29 +12,7 @@
 </head>
 
 <body>
-    <main class="main">
-
-        <nav class="navbar">
-            <div class="logo-container"></div>
-            <ul>
-                <li class="box box1">Home</li>
-                <li class="box box2">Explore</li>
-                <li class="box box3">Notification</li>
-                <li class="box box4">Messgaes</li>
-                <li class="box box5">
-                    <a id="open-modal" href='{% url "create_post" %}' >Add Post</a>
-                </li>
-            </ul>
-        </nav>
-        {%block content %}
-        
-        {%endblock%}
-    </main>
-    <script>
-        document.getElementById('open-modal').addEventListener('click',(event)=>{
-            document.createElement('section')
-        })
-    </script>
+   
 </body>
 
 </html>

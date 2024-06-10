@@ -20,9 +20,11 @@ from django.contrib import admin
 from django.urls import path
 
 from login.views import login_page, signup_page, login_view, signup_view
-from posts.views import get_post, home_page, user_posts, delete_post
+from posts.views import get_post, user_posts, delete_post
 from createpost.views import create_post
 from newpost.views import create_post_in_db
+from frontendAdmin.views import home_page
+
 
 
 
@@ -43,5 +45,7 @@ urlpatterns = [
     path('login', login_page, name="login_page"),
     path('signup', signup_page, name="signup_page"),
     path('create-post', create_post, name="create_post"),
+    
+
 
 ]

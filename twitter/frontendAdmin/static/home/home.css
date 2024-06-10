@@ -1,0 +1,92 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:"Roboto", sans-serif;
+}
+
+:root {
+    /* Primary Colors */
+    --twitter-blue: #1DA1F2;
+    --twitter-border: gray;
+    /* --twitter-dark-blue: #004D99;
+    --twitter-light-blue: #A6D4FA; */
+}
+
+.main {
+    height: fit-content;
+    width: 100%;
+    background: #000;
+
+    & .hero-section {
+        display: flex;
+        max-width: 998px;
+        margin: auto;
+        /* background: white; */
+        height: 100%;
+
+        & .navbar {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            height: 100%;
+            width: 30%;
+            /* background: var(--twitter-blue); */
+            padding: 1.3rem;
+            position:sticky;
+            top: 0;
+
+            & .logo-container {
+                pointer-events: none;
+                display: inline;
+                margin: 1rem 0 1.5rem;
+                color: white;
+            }
+            & ul{
+                font-size: 1.5rem;
+                font-weight: 700;
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                & .box{
+                    display: inline;
+                    color: white;
+                    cursor: pointer;
+                    & span{
+                        background-color: transparent;
+                        transition:all 1s ease;
+                        border-radius: 0;
+
+                    }
+                    & span:hover{
+                        display: inline;
+                        border-radius: 10px;
+                        background-color:rgba(255, 255, 255, 0.2)
+
+                    }
+                }
+               
+
+
+
+            }
+
+            & .profile {
+                justify-self: flex-end;
+            }
+        }
+
+    }
+
+
+    & .modal-wrapper {
+        position: absolute;
+        top: 0;
+    }
+}

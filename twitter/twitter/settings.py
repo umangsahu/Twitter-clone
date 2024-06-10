@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'login',
     'posts',
     'createpost',
-    'newpost'
+    'newpost',
+    'frontendAdmin'
 ]
 
 MIDDLEWARE = [

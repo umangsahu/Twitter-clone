@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'home/home.css' %}">
+    <link rel="icon"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFwAAABcCAMAAADUMSJqAAAAY1BMVEX///8AAAD7+/uNjY3Dw8OysrLw8PBGRkYzMzPq6ur19fX4+PjU1NQODg6np6dsbGzf3990dHQiIiIbGxtjY2OcnJw7Ozt/f38tLS2WlpZXV1e4uLhBQUHNzc1dXV0WFhZPT094qSQEAAADGElEQVRoge1aa7uyIBBEM/NSp/tdy///K19lYVkSCgm+vE/z4Tx5wonGcWeRWMJRzLKSBUKZzQpgZcOf1TwNxQxI5ytJvsjDUg/IF0C+CDxtQLoYyFcR5j0gX/Xk8zjcjM0TVkQRZUBasFksbtZTZ/HIMxbs3hkjInUvekzyH36wwcF4s2SMjdP4d6MkHmPywj76PombVZcx+9Y2OMMhrQs3YxuDMJaar4be3bgZ+3OVPd/Jt4+u3Ixt4YxZm/XYg+z1eFh9ktxnd26WCtl5uGZW2W+S+zGBG7WEtuAKB3+vg86Su5lYWu/0696Msl8l935y93AmLhHXbVfRAXO81h5505DptvB6Td5ukdvR4BrKhLjk+Cq7h8E1aC45wMFSfjIa/OrFjSWJT7fiTWvyBLfXjY/BddzIdJfw+sDfwNp28OZmVUJcImrCcJ8rgxtuW2e0dH4oOxp89117fFTTZRVcxIsqa04V/A0exMvLRIePwTWI6YIAein2M7gGWcL4wZZwT6jgdojp8i6eJKC/wTWI6fI2Hu/6WxjufvEBfLz4iVp4CsRtlv1rpyC05KAJGAQ0OcT3mBabb0GT407sEwQiOU48ial9gkAkBy9h6YnYJwjEdHlyCNm7UNxYtHhyhJV985TkEHTngLLXmMcyOZpgsg+PZRR43pf0rv0K60QDv/VDyY6rngY8uCrJf7+MDJU/pfAM1NsQblcrqiVWXC5GCX3S1P6ZQqUy992avLavChyhGk5oQmsqhpDd9wFchQaXthCfBlHUwYFf/5J2klu15jQ5hOwnL9kPkvtGTqfJ0frLjgbfawsWmhzesh+RW/eyEOPCP5G22ROglvWvZ1IP5uICT2umXwyuga5MDYuxjxDfPTEsbpkuhm0NbIfqCo11L4fwgDXHy2LsMwwG1yBEa9Y9BHlRmYeOgBW8s41AKyk4rr7Q4Be7CQ5jdifZsYI/31SN+jlmd5BdGfxtRTI8rdp/lF1xf4gww9Oq7vPUf/jhf0MadxMq6vZZ1I2/qFuWUTdb424TR93gjrs1H/dHBUmsn0P8A2zWG0Bi8khwAAAAAElFTkSuQmCC">
+    <title>{% block title %} Twitter {% endblock %}</title>
+</head>
+
+<body>
+    <main class="main">
+        <section class="hero-section">
+            {% include 'component/sidebar.html' %}
+            {% include 'component/feed.html' %}
+        </section>
+        <div class="modal-wrapper">
+            {%include 'component/modal.html'%}
+        </div>
+
+        <script src="{% static 'home/home.js' %}"></script>
+    </main>
+</body>
+
+</html>

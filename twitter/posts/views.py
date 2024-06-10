@@ -48,5 +48,5 @@ def get_post(request, post_id):
         return HttpResponseNotFound('Post not found')
     
 #pages
-def home_page(request):
-    return render(request,'./feed.html')
+# def home_page(request):
+#     return render(request,'./feed.html')
