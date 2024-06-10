@@ -30,7 +30,7 @@ def create_post_in_db(request):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
     
-    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
+    # return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
 
 def create_post(request):
     return render(request, './index.html')

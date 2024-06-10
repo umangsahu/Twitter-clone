@@ -11,7 +11,10 @@
 :root {
     /* Primary Colors */
     --twitter-blue: #1DA1F2;
+    --twitter-blue-opaq: #189bec67;
     --twitter-border: gray;
+    --twitter-primary-red: rgb(245, 5, 5);
+
     /* --twitter-dark-blue: #004D99;
     --twitter-light-blue: #A6D4FA; */
 }
@@ -24,6 +27,7 @@
 
     & .hero-section {
         display: flex;
+
         max-width: 998px;
         margin: auto;
         /* background: white; */
@@ -36,7 +40,7 @@
             align-items: flex-start;
             justify-content: flex-start;
             height: 100%;
-            width: 30%;
+            width: 50%;
             /* background: var(--twitter-blue); */
             padding: 1.3rem;
             position: sticky;
@@ -49,6 +53,8 @@
                 color: white;
                 margin-bottom: 40px;
                 padding: 10px;
+                padding-top: 0;
+                margin-top: 0;
             }
 
             & ul {
@@ -89,6 +95,7 @@
                         border-radius: 30px;
                         background: var(--twitter-blue);
                         color: white;
+                        cursor: pointer;
                     }
                 }
             }
@@ -102,9 +109,10 @@
                 width: 100%;
                 gap: 10px;
 
-                & .dp{
+                & .dp {
                     width: 90px;
-                    & img{
+
+                    & img {
                         width: 100%;
                         aspect-ratio: 1/1;
                         border-radius: 50%;
@@ -113,23 +121,172 @@
                         object-position: center;
                     }
                 }
-                & .profile-info-wrapper{
+
+                & .profile-info-wrapper {
                     width: 100%;
-                    & .profile-info-header{
+
+                    & .profile-info-header {
                         color: white;
                         font-weight: 800;
                         font-size: 1.5rem;
                     }
 
-                    
+                    & .button-wrapper {
+                        padding: 10px 0;
+                        display: flex;
+                        gap: 10px;
+
+                        & a {
+                            display: block;
+                            text-align: center;
+                            color: white;
+                            font-weight: 400;
+                            gap: 10px;
+                            text-decoration: none;
+                            padding: 5px 10px;
+                            font-size: 0.9rem;
+                            border-radius: 5px;
+                        }
+
+                        & a.btn-profile {
+                            /* background: var(--twitter-blue); */
+                            background: transparent;
+                            color: var(--twitter-blue);
+                            border: 1.5px solid var(--twitter-blue);
+                        }
+
+                        & a.btn-logout {
+                            background: transparent;
+                            color: var(--twitter-primary-red);
+                            border: 1.5px solid var(--twitter-primary-red);
+                            display: flex;
+                            align-items: center;
+                        }
+                    }
+
                 }
             }
+        }
+
+        & .feed-wrapper {
+            width: 100%;
+            border-left: 1px solid gray;
+            border-right: 1px solid gray;
+            height: 100%;
+            color: white;
+
+            & .feed-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                text-transform: capitalize;
+
+                & .feed-header-box {
+                    text-align: center;
+                    width: 50%;
+                    line-height: 70px;
+                    font-weight: 500;
+                    font-size: 1.3rem;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                }
+
+                & .feed-header-box:hover {
+                    background-color: rgba(255, 255, 255, 0.2);
+                }
+
+                & .active:after {
+                    content: "";
+                    height: 5px;
+                    width: 60px;
+                    border-radius: 30px;
+                    background: var(--twitter-blue);
+                }
+            }
+
         }
     }
 
 
     & .modal-wrapper {
         position: absolute;
+        z-index: 3;
         top: 0;
+        background-color: var(--twitter-blue-opaq);
+        height: 100%;
+        width: 100%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+
+        & .modal-container {
+            min-height: 400px;
+            background: black;
+            width: 500px;
+            padding: 2rem;
+            border-radius: 20px;
+
+            & .modal-header {
+                /* height: 80px; */
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                & h3 {
+                    font-size: 1.8rem;
+                }
+
+            }
+
+            & .modal-content {
+
+                padding: 10px;
+                height: 100%;
+                & form {
+                    & #post-content{
+                        height: auto;
+                        background: transparent;
+                        border: none;
+                        color: white;
+                        width: 100%;
+                        font-size: 1.3rem;
+                        line-height: 1.5rem;
+                        resize: none; /* Prevent manual resizing */
+                    }
+                    & #post-content:focus{
+                        border: none;
+                        outline: none;
+                    }
+                    & .post-form-button-wrapper{
+                        display: flex;
+                        justify-content:space-between;
+                        align-items: center;
+                        & #word-counter{
+                            font-size: 0.7rem;
+                            font-weight: 0.4rem;
+                            color: white;
+                        }
+                        & #post-submit-btn{
+                            color: white;
+                            background: var(--twitter-blue);
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            padding:5px 10px ;
+                            /* gap: px; */
+                            font-size: 1.2rem;
+                            border:none ;
+                            border-radius: 10px;
+                        }
+                    }
+
+                }
+            }
+
+        }
     }
+
 }

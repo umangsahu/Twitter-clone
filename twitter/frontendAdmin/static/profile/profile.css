@@ -1,0 +1,82 @@
+.profile-info {
+    & .profile-header {
+        position: sticky;
+        top: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 200px;
+        width: 100%;
+        padding: 10px;
+
+        /* background: gray; */
+        & .profile-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+
+            & .user-info-wrapper {
+
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            & .follower-container {
+                display: flex;
+                gap: 20px;
+               
+                & .btn-follower,
+                .btn-following {
+                    background: transparent;
+                    color: var(--twitter-blue);
+                    border:none;
+                    text-transform: capitalize;
+                    & span{
+                        font-weight: 800;
+                    }
+                }
+
+
+            }
+        }
+
+        & .profile-img-wrapper {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 30px;
+
+            & .profile-img {
+                height: 100px;
+                width: 100px;
+
+
+                & img {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                    border: 3px solid black;
+
+                }
+            }
+
+            & .edit-profile {
+                padding: 7px 15px;
+                background: transparent;
+                color: white;
+                border-radius: 20px;
+                border: 1px solid white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+                cursor: pointer
+            }
+        }
+    }
+}
