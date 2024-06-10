@@ -1,0 +1,110 @@
+{% extends "login-base.html" %}
+{% load static %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'createPost/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <!-- <button id="open-modal" class="open-modal-btn">Add Post</button> -->
+
+    <!-- Modal Structure -->
+    <div id="post-modal" class="modal">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Post</h2>
+                <span id="close-modal" class="close-btn">&times;</span>
+            </div>
+            <form id="create-post-form">
+                {% csrf_token %}
+                <textarea type="text" id="post-content" to></textarea>
+                <button id="post-btn" class="post-btn" type="submit">
+                    Post
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get modal element
+    const modal = document.getElementById('post-modal');
+    // Get open modal button
+    const openModalBtn = document.getElementById('open-modal');
+    // Get close button
+    const closeModalBtn = document.getElementById('close-modal');
+
+    // Listen for open click
+    openModalBtn.addEventListener('click', () => {
+        console.log("open modal click");
+        modal.style.display = 'block';
+    });
+
+    // Listen for close click
+    closeModalBtn.addEventListener('click', () => {
+        console.log("close button click");
+        modal.style.display = 'none';
+        window.location.href = '/'
+    });
+
+    // Listen for outside click
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+            window.location.href = '/'
+        }
+    });
+
+    // Handle form submission
+    document.getElementById('create-post-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const content = document.getElementById('post-content').value;
+        const csrfToken = getCookie('csrftoken');
+
+        try {
+            const res = await fetch("{% url 'create_post_in_db' %}", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                mode: 'same-origin',
+                body: JSON.stringify({ content: content })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                if (data.success) {
+                    alert("Post created successfully");
+                    modal.style.display = 'none';
+                    // Optionally reload the page or update the UI
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } else {
+                alert('Network response was not ok');
+            }
+        } catch (error) {
+            alert('Fetch error: ' + error);
+        }
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+{% endblock %}
