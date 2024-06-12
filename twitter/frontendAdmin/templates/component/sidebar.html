@@ -12,8 +12,9 @@
         </li>
         <li class="box box2"><span onclick="toggleModal('EXPLORE')">Explore</span></li>
         <li class="box box3" id="notification"><span>Notification</span></li>
+        <li class="box box3" id="pending-request-sidebar" onclick="toggleModal('PENDINGREQUEST')"><span >Pending Requests</span></li>
         <li class="box box4"><span>Messgaes</span></li>
-        <li class="box5"  onclick='toggleModal("createPost")'>
+        <li class="box5" onclick='toggleModal("createPost")'>
             <a id="open-modal">Add Post</a>
         </li>
     </ul>
@@ -26,7 +27,7 @@
             <div class="profile-info-header">Umang sahu</div>
             <div class="button-wrapper">
                 <a href="profile-page" class="btn-profile">View Profile</a>
-                <a href="#" class="btn-logout"> Log Out
+                <a href="#" class="btn-logout" onclick="logOut()"> Log Out
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
                         <path fill="currentColor"
                             d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z" />
@@ -45,3 +46,5 @@
         document.createElement('section')
     })
 </script> -->
+
+

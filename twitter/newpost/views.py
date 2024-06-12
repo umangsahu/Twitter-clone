@@ -16,9 +16,8 @@ def create_post_in_db(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            content = data.get('content')
+            content = data.get('post')
             user = request.user
-
             if not content:
                 return JsonResponse({'success': False, 'error': 'Content cannot be empty'}, status=400)
 

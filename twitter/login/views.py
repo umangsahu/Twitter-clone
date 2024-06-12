@@ -1,12 +1,14 @@
 # views.py
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404,redirect
 from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password, check_password
 from .models import UserData
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
-from django.views.decorators.csrf import csrf_protect
 import json
+
+
 
 # Create your views here.
 # for handle request
@@ -18,9 +20,9 @@ def login_view(request):
             data = json.loads(request.body)
             username = data['username']
             password = data['password']
-            print(data)
+            
             user = authenticate(username=username, password=password)
-            print(user)
+        
             if user is not None:
                 login(request, user)
                 return JsonResponse({'status': 'success', 'message': 'Login successful'})
@@ -66,7 +68,9 @@ def signup_view(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
-
+def logout_view(request):
+    logout(request)
+    return redirect('home') 
 
 def find_users(request):
     if request.method == 'GET':
@@ -80,7 +84,24 @@ def find_users(request):
             return JsonResponse({'users': user_data})
         else:
             return JsonResponse({'error': 'Please enter a single letter query'})
-
+    
+# @login_required
+def get_user_details(request, user_id):
+    UserModel = get_user_model()
+    try:
+        user = get_object_or_404(UserModel, id=user_id)
+    except UserModel.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+    
+    user_data = {
+        'id': user.id,
+        # 'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+    }
+    
+    return JsonResponse({'status': 'ok', 'user': user_data})
 
 # for html pages
 def login_page(request):

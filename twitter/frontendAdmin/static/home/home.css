@@ -265,7 +265,7 @@
     height: 100%;
 }
 
-.main .modal-wrapper .modal-container .modal-content form #post-content {
+.main .modal-wrapper .modal-container .modal-content form #new-post-content {
     height: auto;
     background: transparent;
     border: none;
@@ -276,7 +276,7 @@
     resize: none;
 }
 
-.main  .modal-wrapper .modal-container .modal-content form #post-content:focus {
+.main  .modal-wrapper .modal-container .modal-content form #new-post-content:focus {
     border: none;
     outline: none;
 }

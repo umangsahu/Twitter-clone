@@ -15,7 +15,7 @@ function getCookie(name) {
 }
 
 const wordCounterFunc = () => {
-    const textArea = document.getElementById('post-content');
+    const textArea = document.getElementById('new-post-content');
     const maxLength = textArea.getAttribute('maxlength');
     const wordCounter = document.getElementById('word-counter');
     const postBtn = document.getElementById("post-submit-btn")
@@ -31,12 +31,12 @@ const wordCounterFunc = () => {
 }
 
 const toggleModal = (component) => {
-    console.log('click');
     const modal = document.getElementById("modal");
     const createPost = document.getElementById('create-post')
     const editProfile = document.getElementById('edit-profile')
     const modalHeading = document.getElementById('modal-heading')
     const exploreSection = document.getElementById('explore-section')
+    const pendingRequestSection = document.getElementById('pending-request-section')
 
     if (modal.style.display !== 'none') {
         modal.style.display = "none";
@@ -47,6 +47,7 @@ const toggleModal = (component) => {
     editProfile.style.display = 'none'
     exploreSection.style.display = 'none'
     createPost.style.display = 'none'
+    pendingRequestSection.style.display = 'none'
 
 
     if (component === "createPost") {
@@ -59,21 +60,21 @@ const toggleModal = (component) => {
     } else if (component === 'EXPLORE') {
         exploreSection.style.display = 'block'
         modalHeading.innerHTML = 'Find New Peoples'
+    } else if (component === 'PENDINGREQUEST') {
+        pendingRequestSection.style.display = 'block'
+        modalHeading.innerHTML = 'Pending Request'
     }
 
 }
 
 
-// const usersPost = () => {
-//     document.addEventListener('DOMContentLoaded', async () => {
 
-// }
 const userFeed = async () => {
 
     const postsContainer = document.getElementById('posts-container');
     postsContainer.innerHTML = ''
     const response = await fetch('/user-posts');
-    console.log(response);
+    // console.log(response);
     if (response.ok) {
         const posts = await response.json();
         posts.forEach(post => {
@@ -138,11 +139,9 @@ const usersFriendsFeed = async () => {
 
     const postsContainer = document.getElementById('posts-container');
     const response = await fetch('/user-posts');
-    console.log(response);
     if (response.ok) {
         const posts = await response.json();
         posts.forEach(post => {
-            console.log(post);
             const postElement = document.createElement('div');
             postElement.classList.add('post');
             postElement.innerHTML = ``;
@@ -199,9 +198,9 @@ const findPeople = () => {
                     if (data.users.length > 0) {
                         const peopleList = document.createElement('div');
                         peopleList.classList.add('explored-list-group');
-                        console.log(data);
+
                         data.users.forEach(people => {
-                            console.log(people);
+
                             const peopleListItem = document.createElement('div');
                             peopleListItem.classList.add('explored-list-item');
 
@@ -232,6 +231,42 @@ const findPeople = () => {
     });
 };
 
+// function related to follower/following
+
+const acceptRequest = async (id, follower_id) => {
+    const csrfToken = getCookie('csrftoken')
+    const res = await fetch(`api/accept-follow-request/${id}`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        }
+
+    })
+    if (res.ok) {
+        document.getElementById(`req-con-${follower_id}`).remove()
+    }
+    const data = await res.json()
+
+}
+
+const rejectRequest = async (id, follower_id) => {
+    const csrfToken = getCookie('csrftoken')
+    const res = await fetch(`api/reject-follow-request/${id}`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        }
+
+    })
+    if (res.ok) {
+        document.getElementById(`req-con-${follower_id}`).remove()
+    }
+    const data = await res.json()
+
+}
+
 
 const sendRequest = async (userId) => {
     const csrfToken = getCookie('csrftoken')
@@ -249,18 +284,146 @@ const sendRequest = async (userId) => {
         btnFollower.innerHTML = `Sent`
         btnFollower.style = "background:white;border:1px solid var(--twitter-blue);color:var(--twitter-blue); cursor:not-allowed;"
         btnFollower.setAttribute('disabled', 'true');
-        console.log(data.message);
+        // console.log(data.message);
     }
+}
+
+const getPendingRequest = async () => {
+    const pendingRequest = document.getElementById('pending-request-sidebar');
+    const pendingRequestContainerModal = document.getElementById('pending-request-container');
+
+    const csrfToken = getCookie('csrftoken'); // Assuming you have a function to get the CSRF token
+
+    try {
+        const res = await fetch('api/get-pending-request', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken // CSRF token for security, even though it's a GET request
+            }
+        });
+        const data = await res.json();
+        if (data.pending_requests.length > 0) {
+            pendingRequest.innerHTML = `<span>Pending Request <sup style="color:var(--twitter-blue); font-size:0.8em;">(${data.pending_requests.length})</sup></span>`
 
 
+            data.pending_requests.forEach(async (request) => {
+                const res = await fetch(`api/get-user/${request.follower_id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken // CSRF token for security, even though it's a GET request
+                    }
+                })
+                const userData = await res.json();
+                const requestContainer = document.createElement('div');
+                requestContainer.classList.add("req-wrapper");
+                requestContainer.id = `req-con-${request.follower_id}`;
+                requestContainer.innerHTML = `
+                <div class="profile-img">
+                img
+                </div>
+                <div class="req-user-info">
+                    <div class="profile">
+                    ${userData.user.first_name} ${userData.user.last_name}
+                    </div>
+                    <div class="action-wrapper">
+                        <button class="btn-accept" onclick=acceptRequest("${request.id}","${request.follower_id}")>Accept</button>
+                        <button class="btn-reject" onclick=rejectRequest("${request.id}","${request.follower_id}")>Reject</button>
+                    </div>
+                </div>
+                `;
+                pendingRequestContainerModal.append(requestContainer)
+            });
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+// post crudOperation
+
+
+const createPost = () => {
+    const form = document.getElementById('create-post-form');
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault()
+        const textArea = document.getElementById('new-post-content');
+
+        const csrfToken = getCookie('csrftoken')
+        const res = await fetch('api/create-post', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ post: textArea.value })
+        })
+        const data = await res.json()
+        if (data.message === "Post created successfully") {
+            toggleModal()
+            const body = document.getElementById('body');
+            const temp = body.innerHTML;
+
+            body.innerHTML = `
+                <div style="padding:10px;color: white;border-radius:20px; position: absolute;top: 50px; left: calc(50% - 40px); background: #000; border:1px solid green; font-size:2rem; font-weight:800; display:flex; align-items:center; gap:5px">
+                <svg style="color:green;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M20.925 13.163A8.998 8.998 0 0 0 12 3a9 9 0 0 0 0 18M9 10h.01M15 10h.01"/><path d="M9.5 15c.658.64 1.56 1 2.5 1s1.842-.36 2.5-1m.5 4l2 2l4-4"/></g></svg>
+                 ${data.message}
+                </div>
+            `;
+            body.style = 'width:100%; height:100vh; background:#000;'
+
+            setTimeout(() => {
+                body.innerHTML = temp;
+
+            }, 2000);
+        }
+
+
+    })
 
 
 }
 
 
+const deletePost = async (postId) => {
+    console.log(postId);
+    const csrfToken = getCookie('csrftoken'); // Ensure the CSRF token is available
+    const response = await fetch(`api/delete-post/${postId}/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken// Include CSRF token in the request
+        }
+    });
+
+
+    const data = await response.json()
+    console.log(data);
+    if (data.message === "Post deleted successfully") {
+        const body = document.getElementById('body');
+        const temp = body.innerHTML;
+
+        body.innerHTML = `
+            <div style="padding:10px;color: white;border-radius:20px; position: absolute;top: 50px; left: calc(50% - 40px); background: #000; border:1px solid green; font-size:2rem; font-weight:800; display:flex; align-items:center; gap:5px">
+            <svg style="color:green;" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M20.925 13.163A8.998 8.998 0 0 0 12 3a9 9 0 0 0 0 18M9 10h.01M15 10h.01"/><path d="M9.5 15c.658.64 1.56 1 2.5 1s1.842-.36 2.5-1m.5 4l2 2l4-4"/></g></svg>
+             ${data.message}
+            </div>
+        `;
+        body.style = 'width:100%; height:100vh; background:#000;'
+
+        setTimeout(() => {
+            body.innerHTML = temp;
+        }, 2000);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     activeFeed()
     findPeople()
+    createPost()
+    getPendingRequest()
 })
 
 wordCounterFunc()

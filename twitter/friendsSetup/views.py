@@ -56,7 +56,6 @@ def get_pending_request(request):
         {
             'id': rel.id,
             'follower_id': rel.follower.id,
-            'follower_username': rel.follower.username,
             'created_at': rel.created_at
         } for rel in pending_requests
     ]

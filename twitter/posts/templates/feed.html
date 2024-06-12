@@ -25,22 +25,6 @@
         const data = await res.json()
         console.log(data,"get post");
     }
-    async function deletePost(postId) {
-        const csrfToken = getCookie('csrftoken'); // Ensure the CSRF token is available
-        const response = await fetch(`/delete-post/${postId}/`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken// Include CSRF token in the request
-            }
-        });
-        if (response.ok) {
-            // document.getElementById(`post-${postId}`).remove();
-            console.log('Post deleted successfully');
-        } else {
-            console.error('Failed to delete post');
-        }
-    }
-    
+
 </script>
 {%endblock%}

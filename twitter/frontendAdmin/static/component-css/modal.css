@@ -43,8 +43,9 @@
             & .explored-list-item {
                 display: flex;
                 gap: 10px;
+
                 & .e-profile-img {
-                width: 40%;
+                    width: 40%;
 
                 }
 
@@ -63,16 +64,15 @@
                         font-size: 1.2rem;
                         border-radius: 10px;
                         cursor: pointer;
-                        border:none;
+                        border: none;
                     }
                 }
             }
-            &.explored-list-item:hover{
-                background:rgba(gray,0.5);
-                
+
+            &.explored-list-item:hover {
+                background: rgba(gray, 0.5);
+
             }
-
-
         }
     }
 }
@@ -89,5 +89,76 @@
 
     to {
         transform: rotate(360deg);
+    }
+}
+
+#pending-request-section {
+    height: 100%;
+
+    & #pending-request-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        & .req-wrapper {
+            height: 80px;
+            display: flex;
+            color: white;
+            background: rgba(129, 123, 123,0.5);
+            border-radius: 10px;
+            padding: 10px;
+
+
+
+            & .req-user-info {
+                height: 100%;
+                width: 100%;
+
+                & .profile-img {
+                    width: 200px;
+                    height: 100%;
+                    background: yellow;
+                    padding: 5px;
+                }
+
+                & .profile {
+                    height: 50%;
+                    width: 100%;
+                    text-transform: capitalize;
+                    font-size: 1.3rem;
+                    font-weight: 500;
+                    padding: 5px;
+                }
+
+                & .action-wrapper {
+                    padding: 5px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    gap: 10px;
+
+                    & .btn-accept {
+                        background: var(--twitter-blue);
+                        color: white;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        border: none;
+                        padding: 5px 10px;
+                        color: white;
+                    }
+
+                    & .btn-reject {
+                        background: var(--twitter-primary-red);
+                        color: white;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        border: none;
+                        padding: 5px 10px;
+                        color: white;
+                    }
+
+                }
+            }
+        }
     }
 }

@@ -12,7 +12,7 @@
     <title>{% block title %} Twitter {% endblock %}</title>
 </head>
 
-<body>
+<body id="body">
     <main class="main">
         <section class="hero-section">
             {% include 'component/sidebar.html' %}
@@ -21,7 +21,6 @@
         <div class="modal-wrapper" id="modal">
             {%include 'component/modal.html'%}
         </div>
-
         <script src="{% static 'home/home.js' %}"></script>
     </main>
 </body>
