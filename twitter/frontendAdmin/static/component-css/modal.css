@@ -1,0 +1,93 @@
+#explore-section {
+    height: 100%;
+    width: 100%;
+
+    & .explore-header {
+        color: white;
+
+        & .explore-input {
+            width: 100%;
+            border-radius: 10px;
+            height: 40px;
+            color: white;
+            border: 1px solid var(--twitter-blue);
+            background: transparent;
+            padding: 10px;
+            font-size: 1.3rem;
+        }
+    }
+
+    & .people-container {
+        height: 100%;
+        width: 100%;
+        color: white;
+        padding: 10px;
+
+        & .explore-loading {
+            height: 100%;
+            padding: 20px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+
+        }
+
+        & .explored-list-group {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            & .explored-list-item {
+                display: flex;
+                gap: 10px;
+                & .e-profile-img {
+                width: 40%;
+
+                }
+
+                & .e-user-info {
+                    width: 100%;
+                }
+
+                & .e-btn-wrapper {
+                    & button {
+                        background: var(--twitter-blue);
+                        color: white;
+                        font-weight: 500;
+                        padding: 5px 15px;
+                        text-align: center;
+                        display: block;
+                        font-size: 1.2rem;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        border:none;
+                    }
+                }
+            }
+            &.explored-list-item:hover{
+                background:rgba(gray,0.5);
+                
+            }
+
+
+        }
+    }
+}
+
+.explore-loading svg {
+    animation: rotation 1s infinite;
+    /* Apply the rotation animation */
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

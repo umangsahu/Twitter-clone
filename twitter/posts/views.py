@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404, render
 
 @login_required
 def user_posts(request):
+    print(request)
     user = request.user
     posts = NewPost.objects.filter(user=user).order_by('-created_at')
     print(posts)

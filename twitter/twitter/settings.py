@@ -14,6 +14,8 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+# from twitter import friendsSetup
+
 # Load environment variables from .env file
 load_dotenv()
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -45,9 +47,9 @@ INSTALLED_APPS = [
     # apps
     'login',
     'posts',
-    'createpost',
     'newpost',
-    'frontendAdmin'
+    'frontendAdmin',
+    'friendsSetup'
 ]
 
 MIDDLEWARE = [

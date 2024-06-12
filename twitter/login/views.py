@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password, check_password
 from .models import UserData
 from django.contrib.auth import authenticate, login
+from django.db.models import Q
 from django.views.decorators.csrf import csrf_protect
 import json
 
@@ -64,6 +65,22 @@ def signup_view(request):
         return JsonResponse({'success': True, 'redirect_url': '/'})  # Redirect to home or desired page
 
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+
+
+def find_users(request):
+    if request.method == 'GET':
+        query = request.GET.get('q', '').strip() 
+        if len(query) >0:  
+            users = UserData.objects.filter(
+                Q(first_name__istartswith=query) | Q(last_name__istartswith=query)
+            )
+            # Serialize the queryset to JSON
+            user_data = [{'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name} for user in users]
+            return JsonResponse({'users': user_data})
+        else:
+            return JsonResponse({'error': 'Please enter a single letter query'})
+
 
 # for html pages
 def login_page(request):
