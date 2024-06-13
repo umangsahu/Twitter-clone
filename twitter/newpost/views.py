@@ -52,5 +52,32 @@ def like_count(request, post_id):
     post = get_object_or_404(NewPost, id=post_id)
     liked = Like.objects.filter(user=request.user, post=post).exists()
     likes_count = post.likes.count()
-    
+
     return JsonResponse({'status': 'ok', 'liked': liked, 'likes_count': likes_count})
+
+
+@login_required
+@csrf_exempt
+def create_child_post(request, parent_post_id):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            content = data.get('post')
+            user = request.user
+            if not content:
+                return JsonResponse({'success': False, 'error': 'Content cannot be empty'}, status=400)
+
+            # Ensure we are using the UserData instance
+            user_data = UserData.objects.get(pk=user.pk)
+            parent_post = get_object_or_404(NewPost, pk=parent_post_id)
+
+            new_post = NewPost.objects.create(
+                user=user_data,
+                content=content,
+                parent_post=parent_post,
+                is_child_post=True
+            )
+            return JsonResponse({'success': True, 'message': 'Post created successfully'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)

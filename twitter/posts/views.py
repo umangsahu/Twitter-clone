@@ -6,6 +6,7 @@ from django.db.models import Q
 from newpost.models import NewPost
 from django.contrib.auth import get_user_model
 from friendsSetup.models import Relationship
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -13,19 +14,22 @@ from friendsSetup.models import Relationship
 
 @login_required
 def user_posts(request):
-
     user = request.user
     posts = NewPost.objects.filter(user=user).order_by('-created_at')
-    
-    posts_data = [
-        {'post_id': post.id,
-         'username': f"{post.user.first_name} {post.user.last_name}",
-         'content': post.content,
-         'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-         'likes': post.likes,
-         'is_child_post': post.is_child_post,
-         } for post in posts
-    ]
+
+    posts_data = []
+    for post in posts:
+        # Exclude child posts if that's your intention
+        if not post.is_child_post:
+            post_data = {
+                'post_id': post.id,
+                'username': f"{post.user.first_name} {post.user.last_name}",
+                'content': post.content,
+                'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                'likes': post.likes,
+            }
+            posts_data.append(post_data)
+
     return JsonResponse(posts_data, safe=False)
 
 
@@ -43,17 +47,16 @@ def delete_post(request, post_id):
 
 
 def get_post(request, post_id):
-    try:
-        post = NewPost.objects.get(id=post_id, user=request.user)
-        post_data = {
-            'id': post.id,
-            'content': post.content,
-            'created_at': post.created_at,
-            'user': post.user.username,
-        }
-        return JsonResponse(post_data)
-    except:
-        return HttpResponseNotFound('Post not found')
+    post = get_object_or_404(NewPost, id=post_id)
+    post_data = {
+        'post_id': post.id,
+        'username': f"{post.user.first_name} {post.user.last_name}",
+        'content': post.content,
+        'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        # 'likes': post.likes,
+    }
+    
+    return JsonResponse({'status': 'ok', 'post': post_data})
     
 
 
@@ -73,7 +76,7 @@ def get_posts_of_following(request):
     following_ids = list(following_ids) + [user.id]
     
     # Get the posts made by the logged-in user and users they are following, ordered by created_at in reverse
-    posts = NewPost.objects.filter(user__in=following_ids).order_by('-created_at')
+    posts = NewPost.objects.filter(user__in=following_ids,is_child_post=False).order_by('-created_at')
     
     # Prepare the response data
     posts_data = [
@@ -87,6 +90,32 @@ def get_posts_of_following(request):
     ]
     
     return JsonResponse({'status': 'ok', 'posts': posts_data})
+
+
+
+
+@login_required
+@csrf_exempt
+def get_child_post(request, parent_post_id):
+    parent_post = get_object_or_404(NewPost, id=parent_post_id)
+    
+    # Filter child posts where is_child_post is True
+    child_posts = NewPost.objects.filter(parent_post=parent_post, is_child_post=True).order_by('-created_at')
+    
+    # Prepare the response data
+    child_posts_data = [
+        {
+            'post_id': post.id,
+            'username': f"{post.user.first_name} {post.user.last_name}",
+            'content': post.content,
+            'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'likes': post.likes.count(),  # Get the count of likes
+        } for post in child_posts
+    ]
+    
+    return JsonResponse({'status': 'ok', 'child_posts': child_posts_data})
+    
+
 
 
 # pages

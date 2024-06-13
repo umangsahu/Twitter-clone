@@ -1,3 +1,4 @@
+{% load static %}
 <div class="modal-container">
     <div class="modal-header">
         <h3 id="modal-heading">Create Post</h3>
@@ -65,4 +66,9 @@
         </div>
     </div>
         <!--pending request section end -->
+
+        <!--comment section-->
+        <div class="replies" id="replies">
+            {% include './replies.html' %}
+        </div>
     </div>

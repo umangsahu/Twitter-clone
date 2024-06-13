@@ -37,6 +37,7 @@ const toggleModal = (component) => {
     const modalHeading = document.getElementById('modal-heading')
     const exploreSection = document.getElementById('explore-section')
     const pendingRequestSection = document.getElementById('pending-request-section')
+    const repliesSection = document.getElementById('replies')
 
     if (modal.style.display !== 'none') {
         modal.style.display = "none";
@@ -48,6 +49,7 @@ const toggleModal = (component) => {
     exploreSection.style.display = 'none'
     createPost.style.display = 'none'
     pendingRequestSection.style.display = 'none'
+    repliesSection.style.display = 'none'
 
 
     if (component === "createPost") {
@@ -63,6 +65,10 @@ const toggleModal = (component) => {
     } else if (component === 'PENDINGREQUEST') {
         pendingRequestSection.style.display = 'block'
         modalHeading.innerHTML = 'Pending Request'
+    }
+    else if (component === 'REPLIES') {
+        repliesSection.style.display = 'block'
+        modalHeading.innerHTML = 'Replies on your Code'
     }
 
 }
@@ -174,7 +180,7 @@ const usersFriendsFeed = async () => {
                 <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 9v12H1V9zm4 12a2 2 0 0 1-2-2V9c0-.55.22-1.05.59-1.41L14.17 1l1.06 1.06c.27.27.44.64.44 1.05l-.03.32L14.69 8H21a2 2 0 0 1 2 2v2c0 .26-.05.5-.14.73l-3.02 7.05C19.54 20.5 18.83 21 18 21zm0-2h9.03L21 12v-2h-8.79l1.13-5.32L9 9.03z"/></svg>
                 <span id="like-btn-counter-${post.id}"></span>
                 </div>
-                <div class="svg-wrapper">
+                <div class="svg-wrapper" onclick='getChildPost("${post.id}")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 32 32">
                         <path fill="currentColor"
                             d="M26.312 25.407s.141-.095.36-.261C29.948 22.61 32 18.938 32 14.855c0-7.62-7.161-13.808-15.995-13.808S0 7.235 0 14.855c0 7.619 7.161 13.807 15.995 13.807c1.131 0 2.26-.099 3.369-.307l.349-.057c2.245 1.452 5.516 2.651 8.38 2.651c.891 0 1.308-.729.74-1.469c-.864-1.063-2.057-2.76-2.521-4.072zm-1.948-6.032c-.952 1.423-3.911 3.849-8.337 3.849h-.063c-4.437 0-7.391-2.437-8.339-3.849a1.575 1.575 0 0 1-.365-.765a.658.658 0 0 1 .6-.703c.009-.005.015-.005.025-.005a.833.833 0 0 1 .437.151a12.185 12.185 0 0 0 7.672 2.74a11.76 11.76 0 0 0 7.683-2.745a.614.614 0 0 1 .416-.161c.355 0 .636.281.647.631a1.812 1.812 0 0 1-.36.859z" />
@@ -526,16 +532,157 @@ const getLike = async (postId) => {
     const likeCount = document.getElementById(`like-btn-counter-${postId}`)
     const likeButton = document.getElementById(`like-btn-${postId}`);
     likeCount.innerHTML = `(${data.likes_count})`;
-    if(data.liked===true){
+    if (data.liked === true) {
         likeButton.style.color = 'var(--twitter-blue)';
     }
 }
+
+const getChildPost = async (postId, isOpenWithChild = false) => {
+    const csrfToken = getCookie('csrftoken')
+    if (!isOpenWithChild) {
+        toggleModal('REPLIES')
+    }
+    parentPostContainer = document.getElementById('parent-post-container');
+
+    const res = await fetch(`api/get-post/${postId}`)
+    const post = await res.json()
+    const getPost = post.post
+    // getLike(getPost.post_id)
+    const postDate = new Date(getPost.created_at);
+
+    const formattedDate = postDate.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true
+    });
+
+    parentPostContainer.innerHTML = `
+    <div class="parent-content-wrapper">
+            <div class="profile-image">img</div>
+            <div class="post-content">
+                <div class="post-header">
+                    <p class="username">${getPost.username}</p>
+                    <p class="date">${formattedDate}</p>
+                </div>
+                <div class="content-wrapper">
+                    ${getPost.content}
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="all-reply-wrapper" id="reply-box">
+    <div class="form-wrapper">
+        <form action="" id="repost-form"><textarea type="text" id="repost-input" rows="7" placeholder="You have something to say.." maxlength="300"></textarea><button type="submit">Post</button></form>
+    </div>
+    <div id="child-post">
+        
+    </div>
+
+
+
+</div>
+        `
+    //create child post
+    document.getElementById('repost-form').addEventListener('submit', (e) => {
+        e.preventDefault()
+        const repostInput = document.getElementById('repost-input').value;
+        createChildPost(postId, repostInput)
+    })
+
+
+    // const csrfToken = getCookie('csrftoken'); // Ensure you have a function to get the CSRF token
+    const response = await fetch(`/api/get-child-post/${postId}/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+        }
+    });
+    const fetchChildData = await response.json()
+    const childPostContainer = document.getElementById('child-post')
+    fetchChildData.child_posts.forEach(childPost => {
+        getLike(`${childPost.post_id}`)
+        const postElement = document.createElement('div');
+        postElement.classList.add('post');
+        postElement.id = `post-home-${childPost.post_id}`
+        const postDate = new Date(childPost.created_at);
+        const formattedDate = postDate.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true
+        });
+        postElement.innerHTML = `
+            <div class="post-content-wrapper">
+            <div class="post-content-upper">
+                <div class="for-profile-img">
+                </div>
+                <div class="for-content">
+                    <div class="post-header">
+                    <p class="username">${childPost.username}</p>
+                        <p class="date">${formattedDate}</p>
+                    </div>
+                    <div class="content-wrapper">
+                        ${childPost.content}
+                    </div>
+                </div>
+            </div>
+            <div class="action-wrapper">
+                <div class="svg-wrapper" onclick="likePost('${childPost.post_id}')" id="like-btn-${childPost.post_id}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 9v12H1V9zm4 12a2 2 0 0 1-2-2V9c0-.55.22-1.05.59-1.41L14.17 1l1.06 1.06c.27.27.44.64.44 1.05l-.03.32L14.69 8H21a2 2 0 0 1 2 2v2c0 .26-.05.5-.14.73l-3.02 7.05C19.54 20.5 18.83 21 18 21zm0-2h9.03L21 12v-2h-8.79l1.13-5.32L9 9.03z"/></svg>
+                <span id="like-btn-counter-${childPost.post_id}"></span>
+                </div>
+                <div class="svg-wrapper" onclick='getChildPost("${childPost.post_id}",${true})'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 32 32">
+                        <path fill="currentColor"
+                            d="M26.312 25.407s.141-.095.36-.261C29.948 22.61 32 18.938 32 14.855c0-7.62-7.161-13.808-15.995-13.808S0 7.235 0 14.855c0 7.619 7.161 13.807 15.995 13.807c1.131 0 2.26-.099 3.369-.307l.349-.057c2.245 1.452 5.516 2.651 8.38 2.651c.891 0 1.308-.729.74-1.469c-.864-1.063-2.057-2.76-2.521-4.072zm-1.948-6.032c-.952 1.423-3.911 3.849-8.337 3.849h-.063c-4.437 0-7.391-2.437-8.339-3.849a1.575 1.575 0 0 1-.365-.765a.658.658 0 0 1 .6-.703c.009-.005.015-.005.025-.005a.833.833 0 0 1 .437.151a12.185 12.185 0 0 0 7.672 2.74a11.76 11.76 0 0 0 7.683-2.745a.614.614 0 0 1 .416-.161c.355 0 .636.281.647.631a1.812 1.812 0 0 1-.36.859z" />
+                    </svg>
+                </div>
+                <div class="svg-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 48 48">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            d="m30 15l-12.1 6.07m0 5.86l12.18 6.11m12.42 2.89a6.55 6.55 0 1 1-13.1 0a6.55 6.55 0 0 1 13.1 0m-.1-23.86a6.55 6.55 0 1 1-13.1 0a6.55 6.55 0 0 1 13.1 0M18.6 24a6.55 6.55 0 1 1-13.1 0a6.55 6.55 0 0 1 13.1 0" />
+                    </svg>
+                </div>
+            </div> 
+        </div>
+            `
+
+        childPostContainer.appendChild(postElement)
+    })
+
+
+
+}
+
+const createChildPost = async (parentPostId, content) => {
+    const csrfToken = getCookie('csrftoken'); // Make sure you have a function to get the CSRF token
+    const response = await fetch(`/api/create-child-post/${parentPostId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({ post: content }),
+    });
+    const data = await response.json();
+    console.log(data, "create child post");
+    // return data;
+};
 // const getUser
 document.addEventListener('DOMContentLoaded', () => {
     activeFeed()
     findPeople()
     createPost()
     getPendingRequest()
+    // createChildPost()
 })
 
 wordCounterFunc()
