@@ -178,7 +178,7 @@
                 color: white;
                 display: flex;
                 gap: 5px;
-                padding: 10px ;
+                padding: 10px;
 
 
                 & .profile-img {
@@ -215,12 +215,18 @@
     & #reply-box {
         /* position: relative; */
         /* height: 400px; */
+        
         width: 100%;
         /* background: red; */
+        padding-top: 10px;
+        margin-bottom: 10px;
 
         & .form-wrapper {
-            width:100%;
+            width: 100%;
             position: stick;
+            border-bottom: 1px solid var(--twitter-blue);
+            margin-bottom: 10px;
+
             & #repost-form {
                 width: 100%;
                 display: flex;
@@ -235,9 +241,11 @@
                     background: transparent;
                     border: none;
                     width: 100%;
+                    color: white;
                     resize: none;
                     /* color: white; */
                 }
+
                 & #repost-input:focus {
                     outline: none;
                     border: none;
@@ -257,12 +265,63 @@
             }
         }
     }
-    & #child-post{
-        background: white;
+
+    & #child-post {
+        color: white;
         max-height: 500px;
         overflow: auto;
-        & .post{
-            
+
+        & .post {
+            height: fit-content;
+            padding: 10px;
+            border-bottom: 1px solid  gray;
+
+            & .post-content-wrapper {
+                & .post-content-upper {
+                    display: flex;
+                    gap: 5px;
+
+                    & .for-profile-img {
+                        width:70px;
+
+                    }
+
+                    & .for-content {
+                        width: 100%;
+                        & .post-header {
+                            padding: 5px 0px;
+                            width: 100%;
+                            
+                            & .username{
+                                font-size:1rem;
+                                font-weight: 500;
+                                text-transform: capitalize;
+
+                            }
+                            & .date {
+                                font-size: 0.8rem;
+                                color: gray;
+
+                            }
+                        }
+                        & .content-wrapper{
+                            font-size: 1.2rem;
+
+                        }
+
+                    }
+                    
+                }
+                & .action-wrapper{
+                    display:flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 5px;
+                    font-size: .8rem;
+
+                }
+
+            }
         }
     }
 }
