@@ -4,12 +4,15 @@ from django.http import JsonResponse
 from django.shortcuts import render
 
 from login.models import UserData
-from .models import NewPost
+from .models import NewPost, Like
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required  # type: ignore
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
+
+
 @login_required
 @csrf_exempt
 def create_post_in_db(request):
@@ -30,3 +33,24 @@ def create_post_in_db(request):
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
 
+
+@login_required
+def like_post(request, post_id):
+    post = get_object_or_404(NewPost, id=post_id)
+    try:
+        like = Like.objects.get(user=request.user, post=post)
+        like.delete()
+        liked = False
+    except Like.DoesNotExist:
+        Like.objects.create(user=request.user, post=post)
+        liked = True
+    likes_count = post.likes.count()
+    return JsonResponse({'status': 'ok', 'liked': liked, 'likes_count': likes_count})
+
+
+def like_count(request, post_id):
+    post = get_object_or_404(NewPost, id=post_id)
+    liked = Like.objects.filter(user=request.user, post=post).exists()
+    likes_count = post.likes.count()
+    
+    return JsonResponse({'status': 'ok', 'liked': liked, 'likes_count': likes_count})

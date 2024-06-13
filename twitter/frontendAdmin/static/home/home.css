@@ -175,6 +175,7 @@
     align-items: center;
     justify-content: space-between;
     text-transform: capitalize;
+    
 }
 
 .main .hero-section .feed-wrapper .feed-header .feed-header-box {
@@ -203,6 +204,11 @@
 .main .hero-section .feed-wrapper .post {
     width: 100%;
 }
+/* .main .hero-section .feed-wrapper .post  .post-header{
+    width: 100%;
+    background: red;
+} */
+
 
 .main .hero-section .feed-wrapper .post .post-content-wrapper {
     display: flex;
@@ -218,10 +224,37 @@
 .main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper .for-profile-img {
     width: 30px;
 }
-
 .main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper .for-content {
     width: 100%;
 }
+
+.main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper .for-content .post-header{
+    /* background: red; */
+    width: 100%;
+    padding: 5px;
+    font-size: 1.5rem;
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: space-between;
+    align-items: flex-end;
+    
+    
+}
+.main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper .for-content .post-header{
+
+    padding: 5px;
+    font-size: 1.5rem;
+    text-transform: capitalize;
+
+}
+.main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper .for-content .post-header .date{
+    /* background: red; */
+    padding: 5px;
+    font-size: 0.7rem;
+    color: gray;
+}
+
+
 
 .main .hero-section .feed-wrapper .post .post-content-wrapper .action-wrapper {
     display: flex;

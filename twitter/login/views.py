@@ -70,7 +70,8 @@ def signup_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('home') 
+    redirect('login_page')
+    return JsonResponse({'success': True, 'redirect_url': '/login'}) 
 
 def find_users(request):
     if request.method == 'GET':

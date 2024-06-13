@@ -99,10 +99,7 @@ const userFeed = async () => {
             </div>
             <div class="action-wrapper">
                 <div class="svg-wrapper">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 48 48">
-                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                            d="M43 17.077c0-5.654-4.583-10.238-10.237-10.238c-3.723 0-6.971 1.993-8.763 4.964c-1.792-2.97-5.04-4.964-8.763-4.964C9.583 6.84 5 11.423 5 17.077c0 1.292.25 2.524.687 3.662C9.072 30.476 24 41.161 24 41.161s14.928-10.685 18.314-20.422c.437-1.138.686-2.37.686-3.662" />
-                    </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 9v12H1V9zm4 12a2 2 0 0 1-2-2V9c0-.55.22-1.05.59-1.41L14.17 1l1.06 1.06c.27.27.44.64.44 1.05l-.03.32L14.69 8H21a2 2 0 0 1 2 2v2c0 .26-.05.5-.14.73l-3.02 7.05C19.54 20.5 18.83 21 18 21zm0-2h9.03L21 12v-2h-8.79l1.13-5.32L9 9.03z"/></svg>
                 </div>
                 <div class="svg-wrapper">
                     <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 32 32">
@@ -136,15 +133,65 @@ const userFeed = async () => {
 
 
 const usersFriendsFeed = async () => {
-
     const postsContainer = document.getElementById('posts-container');
-    const response = await fetch('/user-posts');
+    postsContainer.innerHTML = ''
+    const response = await fetch('api/get-post-of-friends');
+    // console.log(response);
     if (response.ok) {
         const posts = await response.json();
-        posts.forEach(post => {
+        posts.posts.forEach(post => {
+            getLike(`${post.id}`)
             const postElement = document.createElement('div');
             postElement.classList.add('post');
-            postElement.innerHTML = ``;
+            postElement.id = `post-home-${post.post_id}`
+            const postDate = new Date(post.created_at);
+            const formattedDate = postDate.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                hour12: true
+            });
+            postElement.innerHTML = `
+            <div class="post-content-wrapper">
+            <div class="post-content-upper">
+                <div class="for-profile-img">
+                </div>
+                <div class="for-content">
+                    <div class="post-header">
+                    <p class="username">${post.user_username}</p>
+                        <p class="date">${formattedDate}</p>
+                    </div>
+                    <div class="content-wrapper">
+                        ${post.content}
+                    </div>
+                </div>
+            </div>
+            <div class="action-wrapper">
+                <div class="svg-wrapper" onclick="likePost('${post.id}')" id="like-btn-${post.id}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 9v12H1V9zm4 12a2 2 0 0 1-2-2V9c0-.55.22-1.05.59-1.41L14.17 1l1.06 1.06c.27.27.44.64.44 1.05l-.03.32L14.69 8H21a2 2 0 0 1 2 2v2c0 .26-.05.5-.14.73l-3.02 7.05C19.54 20.5 18.83 21 18 21zm0-2h9.03L21 12v-2h-8.79l1.13-5.32L9 9.03z"/></svg>
+                <span id="like-btn-counter-${post.id}"></span>
+                </div>
+                <div class="svg-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 32 32">
+                        <path fill="currentColor"
+                            d="M26.312 25.407s.141-.095.36-.261C29.948 22.61 32 18.938 32 14.855c0-7.62-7.161-13.808-15.995-13.808S0 7.235 0 14.855c0 7.619 7.161 13.807 15.995 13.807c1.131 0 2.26-.099 3.369-.307l.349-.057c2.245 1.452 5.516 2.651 8.38 2.651c.891 0 1.308-.729.74-1.469c-.864-1.063-2.057-2.76-2.521-4.072zm-1.948-6.032c-.952 1.423-3.911 3.849-8.337 3.849h-.063c-4.437 0-7.391-2.437-8.339-3.849a1.575 1.575 0 0 1-.365-.765a.658.658 0 0 1 .6-.703c.009-.005.015-.005.025-.005a.833.833 0 0 1 .437.151a12.185 12.185 0 0 0 7.672 2.74a11.76 11.76 0 0 0 7.683-2.745a.614.614 0 0 1 .416-.161c.355 0 .636.281.647.631a1.812 1.812 0 0 1-.36.859z" />
+                    </svg>
+                </div>
+                <div class="svg-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 48 48">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            d="m30 15l-12.1 6.07m0 5.86l12.18 6.11m12.42 2.89a6.55 6.55 0 1 1-13.1 0a6.55 6.55 0 0 1 13.1 0m-.1-23.86a6.55 6.55 0 1 1-13.1 0a6.55 6.55 0 0 1 13.1 0M18.6 24a6.55 6.55 0 1 1-13.1 0a6.55 6.55 0 0 1 13.1 0" />
+                    </svg>
+                </div>
+        
+                
+            </div> 
+        </div>
+        <hr>
+            `;
             postsContainer.appendChild(postElement);
         });
     } else {
@@ -376,11 +423,8 @@ const createPost = () => {
 
             setTimeout(() => {
                 body.innerHTML = temp;
-
             }, 2000);
         }
-
-
     })
 
 
@@ -419,6 +463,74 @@ const deletePost = async (postId) => {
     }
 }
 
+const logOut = async () => {
+    const csrfToken = getCookie('csrftoken');
+    try {
+        const res = await fetch('api/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            }
+        });
+        if (res.ok) {
+            const data = await res.json();
+
+            if (data.status === 'ok') {
+                console.log(data.redirect_url);
+                window.location.href = data.redirect_url; // Redirect to your desired page
+            } else {
+                console.error('Logout failed:', data.message);
+            }
+        } else {
+            console.error('Network response was not ok.');
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+};
+
+const likePost = async (postId) => {
+    const csrfToken = getCookie('csrftoken');
+    try {
+        const res = await fetch(`/api/like-post/${postId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            }
+        });
+        if (res.ok) {
+            const data = await res.json();
+            const likeButton = document.getElementById(`like-btn-${postId}`);
+            const likeCount = document.getElementById(`like-btn-counter-${postId}`)
+            if (data.liked) {
+                likeButton.style.color = 'var(--twitter-blue)';
+                // Change button text to 'Unlike' if liked
+            } else {
+                likeButton.style.color = 'white'; // Change button text to 'Like' if unliked
+            }
+
+            likeCount.innerHTML = `(${data.likes_count})`; // Update the like count
+        } else {
+            console.error('Network response was not ok.');
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+
+}
+const getLike = async (postId) => {
+    const res = await fetch(`api/like-count/${postId}`)
+    const data = await res.json();
+    const likeCount = document.getElementById(`like-btn-counter-${postId}`)
+    const likeButton = document.getElementById(`like-btn-${postId}`);
+    likeCount.innerHTML = `(${data.likes_count})`;
+    if(data.liked===true){
+        likeButton.style.color = 'var(--twitter-blue)';
+    }
+}
+// const getUser
 document.addEventListener('DOMContentLoaded', () => {
     activeFeed()
     findPeople()
