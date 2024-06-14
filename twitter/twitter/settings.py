@@ -87,12 +87,16 @@ WSGI_APPLICATION = 'twitter.wsgi.application'
 # https://docs.djangoproject.com/en/2document.0/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqli',
+    #     'NAME': 'twitterdb',
+    #     'USER': 'twitter',
+    #     'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+    #     'HOST': 'localhost',
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'twitterdb',
-        'USER': 'twitter',
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
-        'HOST': 'localhost',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 AUTH_USER_MODEL = 'login.UserData'
