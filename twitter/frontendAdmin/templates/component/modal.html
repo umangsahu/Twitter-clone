@@ -26,6 +26,23 @@
     </div>
     <!-- for create -post -->
 
+    <!-- for edit -post -->
+    <div class="modal-content" id="edit-post">
+        <form action="" id="edit-post-form">
+            <textarea name="" rows='10' id="edit-post-content" maxlength="400"
+                placeholder="made mistake!"></textarea>
+            <div class="post-form-button-wrapper">
+                <span id="word-counter"></span>
+                <button id="post-submit-btn" type="submit">Post <svg xmlns="http://www.w3.org/2000/svg" width="1em"
+                        height="1em" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M10 8.64L15.27 12L10 15.36zM8 5v14l11-7z" />
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+    <!-- end edit post -->
+
     <!-- edit profile -->
     <div class="modal-content" id="edit-profile">
         <form action="">
@@ -56,7 +73,7 @@
         <div class="explore-header"><input type="text" class="explore-input" id="explore-input"
                 placeholder="search by name"></div>
         <div class="people-container" id="people-container">
-    </div>
+        </div>
 
     </div>
     <!-- explore section end-->
@@ -65,10 +82,10 @@
         <div class="pending-request-container" id="pending-request-container">
         </div>
     </div>
-        <!--pending request section end -->
+    <!--pending request section end -->
 
-        <!--comment section-->
-        <div class="replies" id="replies">
-            {% include './replies.html' %}
-        </div>
+    <!--comment section-->
+    <div class="replies" id="replies">
+        {% include './replies.html' %}
     </div>
+</div>

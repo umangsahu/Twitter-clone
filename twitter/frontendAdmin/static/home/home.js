@@ -33,12 +33,13 @@ const wordCounterFunc = () => {
 const toggleModal = (component) => {
     const modal = document.getElementById("modal");
     const createPost = document.getElementById('create-post')
+    const editPost = document.getElementById('edit-post')
     const editProfile = document.getElementById('edit-profile')
     const modalHeading = document.getElementById('modal-heading')
     const exploreSection = document.getElementById('explore-section')
     const pendingRequestSection = document.getElementById('pending-request-section')
     const repliesSection = document.getElementById('replies')
-
+    
     if (modal.style.display !== 'none') {
         modal.style.display = "none";
     } else {
@@ -50,6 +51,7 @@ const toggleModal = (component) => {
     createPost.style.display = 'none'
     pendingRequestSection.style.display = 'none'
     repliesSection.style.display = 'none'
+    editPost.style.display = 'none'
 
 
     if (component === "createPost") {
@@ -69,6 +71,9 @@ const toggleModal = (component) => {
     else if (component === 'REPLIES') {
         repliesSection.style.display = 'block'
         modalHeading.innerHTML = 'Replies on your Code'
+    } else if (component === 'EDITPOST') {
+        editPost.style.display = 'block';
+        modalHeading.innerHTML = 'Edit Post'
     }
 
 }
@@ -79,7 +84,7 @@ const userFeed = async () => {
 
     const postsContainer = document.getElementById('posts-container');
     postsContainer.innerHTML = ''
-    const response = await fetch('/user-posts');
+    const response = await fetch('api/user-posts');
     // console.log(response);
     if (response.ok) {
         const posts = await response.json();
@@ -98,7 +103,7 @@ const userFeed = async () => {
                     <div class="post-header">
                         ${post.username}
                     </div>
-                    <div class="content-wrapper">
+                    <div class="content-wrapper" id="post-content-${post.id}">
                         ${post.content}
                     </div>
                 </div>
@@ -170,7 +175,7 @@ const usersFriendsFeed = async () => {
                     <p class="username">${post.user_username}</p>
                         <p class="date">${formattedDate}</p>
                     </div>
-                    <div class="content-wrapper">
+                    <div class="content-wrapper" >
                         ${post.content}
                     </div>
                 </div>
@@ -186,7 +191,7 @@ const usersFriendsFeed = async () => {
                             d="M26.312 25.407s.141-.095.36-.261C29.948 22.61 32 18.938 32 14.855c0-7.62-7.161-13.808-15.995-13.808S0 7.235 0 14.855c0 7.619 7.161 13.807 15.995 13.807c1.131 0 2.26-.099 3.369-.307l.349-.057c2.245 1.452 5.516 2.651 8.38 2.651c.891 0 1.308-.729.74-1.469c-.864-1.063-2.057-2.76-2.521-4.072zm-1.948-6.032c-.952 1.423-3.911 3.849-8.337 3.849h-.063c-4.437 0-7.391-2.437-8.339-3.849a1.575 1.575 0 0 1-.365-.765a.658.658 0 0 1 .6-.703c.009-.005.015-.005.025-.005a.833.833 0 0 1 .437.151a12.185 12.185 0 0 0 7.672 2.74a11.76 11.76 0 0 0 7.683-2.745a.614.614 0 0 1 .416-.161c.355 0 .636.281.647.631a1.812 1.812 0 0 1-.36.859z" />
                     </svg>
                 </div>
-                <div class="svg-wrapper">
+                <div class="svg-wrapper" onclick="editPost('${post.id}')_">
                     <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 48 48">
                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                             d="m30 15l-12.1 6.07m0 5.86l12.18 6.11m12.42 2.89a6.55 6.55 0 1 1-13.1 0a6.55 6.55 0 0 1 13.1 0m-.1-23.86a6.55 6.55 0 1 1-13.1 0a6.55 6.55 0 0 1 13.1 0M18.6 24a6.55 6.55 0 1 1-13.1 0a6.55 6.55 0 0 1 13.1 0" />
@@ -211,11 +216,11 @@ const activeFeed = () => {
     const forYouDepart = document.getElementById('for-you');
     const yourPostDepart = document.getElementById('your-post');
 
-    if (yourPostDepart.classList.contains('active')) {
+    if (forYouDepart && yourPostDepart && yourPostDepart.classList.contains('active')) {
         forYouDepart.classList.add('active')
         yourPostDepart.classList.remove('active')
         usersFriendsFeed()
-    } else {
+    } else if (forYouDepart && yourPostDepart && forYouDepart.classList.contains('active')) {
         forYouDepart.classList.remove('active')
         yourPostDepart.classList.add('active')
         userFeed()
@@ -469,32 +474,32 @@ const deletePost = async (postId) => {
     }
 }
 
-const logOut = async () => {
-    const csrfToken = getCookie('csrftoken');
-    try {
-        const res = await fetch('api/logout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            }
-        });
-        if (res.ok) {
-            const data = await res.json();
+// const logOut = async () => {
+//     const csrfToken = getCookie('csrftoken');
+//     try {
+//         const res = await fetch('api/logout', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'X-CSRFToken': csrfToken
+//             }
+//         });
+//         if (res.ok) {
+//             const data = await res.json();
 
-            if (data.status === 'ok') {
-                console.log(data.redirect_url);
-                window.location.href = data.redirect_url; // Redirect to your desired page
-            } else {
-                console.error('Logout failed:', data.message);
-            }
-        } else {
-            console.error('Network response was not ok.');
-        }
-    } catch (error) {
-        console.error('Fetch error:', error);
-    }
-};
+//             if (data.status === 'ok') {
+//                 console.log(data.redirect_url);
+//                 window.location.href = data.redirect_url; // Redirect to your desired page
+//             } else {
+//                 console.error('Logout failed:', data.message);
+//             }
+//         } else {
+//             console.error('Network response was not ok.');
+//         }
+//     } catch (error) {
+//         console.error('Fetch error:', error);
+//     }
+// };
 
 const likePost = async (postId) => {
     const csrfToken = getCookie('csrftoken');
@@ -677,11 +682,147 @@ const createChildPost = async (parentPostId, content) => {
     // return data;
 };
 // const getUser
+
+// const getProfileInSideBar = async () => {
+//     const res = await fetch('api/get-profile')
+//     const data = await res.json()
+//     console.log(data, "profile");
+
+// }
+
+async function logOut() {
+    const res = await fetch('/api/logout', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    const data = await res.json();
+    console.log(data);
+    if (data.status === 'LOGOUT') {
+        window.location.href = '/login'; // Redirect to login page after logout
+    }
+}
+
+async function getProfile() {
+    const csrfToken = getCookie('csrftoken')
+    const res = await fetch('/api/get-profile', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken // If you need to send the CSRF token
+        }
+    });
+
+    if (res.ok) {
+        const data = await res.json();
+        const profileData = data.user;
+        // const postDate = new Date(profileData.created_at);
+        // const formattedDate = postDate.toLocaleString('en-US', {
+        //     year: 'numeric',
+        //     month: 'long',
+        //     day: 'numeric',
+        //     hour: 'numeric',
+        //     minute: 'numeric',
+        //     second: 'numeric',
+        //     hour12: true
+        // });
+
+        const profile = document.getElementById('profile-section');
+        if (profile) {
+            profile.innerHTML = `
+            <div class="profile-info">
+            <div class="user-info-wrapper">
+                <h1 class="username" id="profile-username" style="text-transform:capitalize;">${profileData.first_name} ${profileData.last_name}</h1>
+                <span class="date-of-joinning"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
+                        viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M19 4h-2V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m1 15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7h16Zm0-9H4V7a1 1 0 0 1 1-1h2v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h2a1 1 0 0 1 1 1Z" />
+                    </svg>Joined at feb 24</span>
+                    <span class="profile-bio">hello world</span>
+            </div>
+            <div class="follower-container">
+                <button class="btn-follower"><span>${profileData.followers.length}</span> follower</button>
+                <button class="btn-following"><span>${profileData.following.length}</span> following</button>
+            </div>
+        </div>
+        <div class="profile-img-wrapper">
+            <div class="profile-img">
+                <img src="https://pbs.twimg.com/profile_images/1759984849794789376/CFYfZhY4_400x400.jpg" alt="">
+            </div>
+            <button class="edit-profile" onclick="toggleModal('editProfile')">Edit Profile <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M12 4a5 5 0 1 1-5 5a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7a7 7 0 0 0-7-7m10 28h-2v-5a5 5 0 0 0-5-5H9a5 5 0 0 0-5 5v5H2v-5a7 7 0 0 1 7-7h6a7 7 0 0 1 7 7zm0-26h10v2H22zm0 5h10v2H22zm0 5h7v2h-7z"/></svg></button>
+        </div>`;
+        }
+
+
+        console.log(data);
+        // Handle the profile data
+        // e.g., display profile information on the frontend
+    } else {
+        console.error('Failed to fetch profile');
+    }
+}
+
+
+
+const editPost = (postId) => {
+    console.log(postId);
+    toggleModal("EDITPOST")
+
+    fetch(`api/get-post/${postId}`)
+        .then(res => res.json())
+        .then(data=>data?.post)
+        .then(data => {
+            const inputField = document.getElementById('edit-post-content');
+            const editForm = document.getElementById('edit-post-form');
+            console.log(data);
+            
+            if (!inputField) {
+                console.error('Input field not found');
+                return;
+            }
+            if (data && data.content) {
+                inputField.value = data.content; 
+                editForm.addEventListener('submit',(e)=>{
+                    e.preventDefault()
+                const editedData = inputField.value;
+                fetch(`/post/edit/${postId}/`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken') // Ensure CSRF token is included
+                        },
+                        body: JSON.stringify({ content: editedData })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.reload()
+                            } else {
+                                alert(data.error);
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                })
+            } else {
+                console.error('Content not found in the fetched data');
+            }
+            
+
+        })
+
+}
+
+// Example usage:
+
+
 document.addEventListener('DOMContentLoaded', () => {
     activeFeed()
     findPeople()
     createPost()
     getPendingRequest()
+    // getProfileInSideBar()
+    getProfile();
     // createChildPost()
 })
 

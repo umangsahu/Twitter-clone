@@ -18,8 +18,8 @@ from os import name
 from django.contrib import admin
 from django.urls import path
 
-from login.views import login_page, signup_page, login_view, signup_view, find_users, logout_view, get_user_details
-from posts.views import get_post, user_posts, delete_post, get_posts_of_following, get_child_post
+from login.views import login_page, signup_page, login_view, signup_view, find_users, logout_view, get_user_details, get_profile
+from posts.views import get_post, user_posts, delete_post, get_posts_of_following, get_child_post, edit_post
 # from createpost.views import create_post
 from newpost.views import create_post_in_db, like_post, like_count,create_child_post
 from frontendAdmin.views import home_page, profile_page
@@ -34,7 +34,7 @@ urlpatterns = [
     path('login-api', login_view, name="login_view"),
     path('signup-api', signup_view, name="signup_view"),
     path('api/create-post', create_post_in_db, name="create_post_in_db"),
-    path('user-posts', user_posts, name='user_posts'),
+    path('api/user-posts', user_posts, name='user_posts'),
     path('api/get-post/<int:post_id>', get_post, name="get_post"),
     path('api/delete-post/<int:post_id>/', delete_post, name='delete_post'),
     path('api/find-users', find_users, name="find_users"),
@@ -49,6 +49,8 @@ urlpatterns = [
     path('api/like-count/<int:post_id>', like_count, name="like_count"),
     path('api/get-child-post/<int:parent_post_id>/', get_child_post, name='get_child_post'),
     path('api/create-child-post/<int:parent_post_id>', create_child_post, name='create_child_post'),
+    path('api/get-profile',get_profile,name="get_user_details"),
+    path('post/edit/<int:post_id>/', edit_post, name='edit_post'),
 
 
     # custom url for htmml pages
@@ -57,8 +59,4 @@ urlpatterns = [
     path('signup', signup_page, name="signup_page"),
     # path('create-post', create_post, name="create_post"),
     path('profile-page', profile_page, name="profile_page"),
-
-
-
-
 ]

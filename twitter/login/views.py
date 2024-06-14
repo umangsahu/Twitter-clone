@@ -1,13 +1,15 @@
 # views.py
 from django.shortcuts import render, get_object_or_404,redirect
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponseRedirect
 from django.contrib.auth.hashers import make_password, check_password
 from .models import UserData
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 import json
-
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from friendsSetup.models import Relationship
 
 
 # Create your views here.
@@ -68,10 +70,21 @@ def signup_view(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
+
+
 def logout_view(request):
-    logout(request)
-    redirect('login_page')
-    return JsonResponse({'success': True, 'redirect_url': '/login'}) 
+    if request.method == 'GET':
+        # Log the user out
+        logout(request)
+        
+        # Redirect to login page or send a JSON response
+        if request.is_ajax():
+            return JsonResponse({'status': 'LOGOUT', 'message': 'User logged out successfully'})
+        else:
+            return HttpResponseRedirect(reverse('login'))
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+       
 
 def find_users(request):
     if request.method == 'GET':
@@ -103,6 +116,36 @@ def get_user_details(request, user_id):
     }
     
     return JsonResponse({'status': 'ok', 'user': user_data})
+
+
+
+
+
+@login_required
+def get_profile(request):
+    
+    User = get_user_model()
+    user = request.user
+
+    # Get followers
+    followers = Relationship.objects.filter(following=user, status=Relationship.ACCEPTED).values_list('follower', flat=True)
+    followers = User.objects.filter(id__in=followers).values('id', 'first_name', 'last_name', 'email')
+
+    # Get following
+    following = Relationship.objects.filter(follower=user, status=Relationship.ACCEPTED).values_list('following', flat=True)
+    following = User.objects.filter(id__in=following).values('id', 'first_name', 'last_name', 'email')
+
+    user_data = {
+        'id': user.id,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'email': user.email,
+        'followers': list(followers),
+        'following': list(following),
+    }
+
+    return JsonResponse({'status': 'ok', 'user': user_data})
+
 
 # for html pages
 def login_page(request):
