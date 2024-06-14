@@ -689,7 +689,7 @@ async function getProfile() {
             'X-CSRFToken': csrfToken // If you need to send the CSRF token
         }
     });
-
+console.log(res);
     if (res.ok) {
         const data = await res.json();
         const profileData = data.user;
@@ -715,7 +715,7 @@ async function getProfile() {
                         <path fill="currentColor"
                             d="M19 4h-2V3a1 1 0 0 0-2 0v1H9V3a1 1 0 0 0-2 0v1H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3m1 15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7h16Zm0-9H4V7a1 1 0 0 1 1-1h2v1a1 1 0 0 0 2 0V6h6v1a1 1 0 0 0 2 0V6h2a1 1 0 0 1 1 1Z" />
                     </svg>Joined at feb 24</span>
-                    <span class="profile-bio">hello world</span>
+                    <span class="profile-bio">${profileData.bio}</span>
             </div>
             <div class="follower-container">
                 <button class="btn-follower"><span>${profileData.followers}</span> follower</button>
@@ -724,7 +724,7 @@ async function getProfile() {
         </div>
         <div class="profile-img-wrapper">
             <div class="profile-img">
-                <img src="https://pbs.twimg.com/profile_images/1759984849794789376/CFYfZhY4_400x400.jpg" alt="">
+                <img src="${profileData.image}" alt="">
             </div>
             <button class="edit-profile" onclick="toggleModal('editProfile')">Edit Profile <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M12 4a5 5 0 1 1-5 5a5 5 0 0 1 5-5m0-2a7 7 0 1 0 7 7a7 7 0 0 0-7-7m10 28h-2v-5a5 5 0 0 0-5-5H9a5 5 0 0 0-5 5v5H2v-5a7 7 0 0 1 7-7h6a7 7 0 0 1 7 7zm0-26h10v2H22zm0 5h10v2H22zm0 5h7v2h-7z"/></svg></button>
         </div>`;

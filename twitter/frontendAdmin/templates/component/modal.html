@@ -45,18 +45,18 @@
 
     <!-- edit profile -->
     <div class="modal-content" id="edit-profile">
-        <form action="">
+        <form id="edit-profile-form" enctype="multipart/form-data">
             <div class="edit-input-wrapper">
                 <label for="profile-image">Profile Image</label>
-                <input type="file" id="profile-image" accept="image/*">
+                <input type="file" id="profile-image" name="image" accept="image/*">
             </div>
             <div class="edit-input-wrapper">
                 <label for="profile-name">Name</label>
-                <input type="text" id="profile-name" placeholder="Your name...">
+                <input type="text" id="profile-name" name="first_name" placeholder="Your name...">
             </div>
             <div class="edit-input-wrapper">
                 <label for="profile-bio">Bio</label>
-                <textarea id="profile-bio" rows="4" maxlength="200" placeholder="Tell us about yourself..."></textarea>
+                <textarea id="profile-bio" name="bio" rows="4" maxlength="200" placeholder="Tell us about yourself..."></textarea>
             </div>
             <div class="post-form-button-wrapper">
                 <button id="profile-submit-btn" type="submit">Save Profile

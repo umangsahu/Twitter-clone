@@ -13,12 +13,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 
 from os import name
 from django.contrib import admin
 from django.urls import path
 
-from login.views import login_page, signup_page, login_view, signup_view, find_users, logout_view, get_user_details, get_profile
+from login.views import login_page, signup_page, login_view, signup_view, find_users, logout_view, get_user_details, get_profile,update_profile
 from posts.views import get_post, user_posts, delete_post, get_posts_of_following, get_child_post, edit_post
 # from createpost.views import create_post
 from newpost.views import create_post_in_db, like_post, like_count,create_child_post
@@ -53,6 +55,7 @@ urlpatterns = [
     path('post/edit/<int:post_id>/', edit_post, name='edit_post'),
     path('api/get-follower',get_follower,name='get_follower'),
     path('api/get-follwing',get_following,name = 'get_following'),
+    path('api/update-profile', update_profile, name='update-profile'),
 
 
     # custom url for htmml pages
@@ -62,3 +65,7 @@ urlpatterns = [
     # path('create-post', create_post, name="create_post"),
     path('profile-page', profile_page, name="profile_page"),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

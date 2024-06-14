@@ -76,7 +76,7 @@ def get_follower(request):
 
     # Get followers
     follower_ids = Relationship.objects.filter(following=user, status=Relationship.ACCEPTED).values_list('follower', flat=True)
-    followers = User.objects.filter(id__in=follower_ids).values('id', 'first_name', 'last_name', 'email')
+    followers = User.objects.filter(id__in=follower_ids).values('id', 'first_name', 'last_name', 'email','profile_image','bio')
 
     # Convert the followers queryset to a list
     followers_list = list(followers)
@@ -97,7 +97,7 @@ def get_following(request):
 
     # Get following
     following_ids = Relationship.objects.filter(follower=user, status=Relationship.ACCEPTED).values_list('following', flat=True)
-    following = User.objects.filter(id__in=following_ids).values('id', 'first_name', 'last_name', 'email')
+    following = User.objects.filter(id__in=following_ids).values('id', 'first_name', 'last_name', 'email','profile_image','bio')
     following_list = list(following)
 
     # Return the JSON response with both followers and following data
