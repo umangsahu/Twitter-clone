@@ -23,7 +23,7 @@ from posts.views import get_post, user_posts, delete_post, get_posts_of_followin
 # from createpost.views import create_post
 from newpost.views import create_post_in_db, like_post, like_count,create_child_post
 from frontendAdmin.views import home_page, profile_page
-from friendsSetup.views import send_follow_request, accept_follow_request, reject_follow_request, get_pending_request
+from friendsSetup.views import send_follow_request, accept_follow_request, reject_follow_request, get_pending_request, get_follower, get_following
 
 
 urlpatterns = [
@@ -51,6 +51,8 @@ urlpatterns = [
     path('api/create-child-post/<int:parent_post_id>', create_child_post, name='create_child_post'),
     path('api/get-profile',get_profile,name="get_user_details"),
     path('post/edit/<int:post_id>/', edit_post, name='edit_post'),
+    path('api/get-follower',get_follower,name='get_follower'),
+    path('api/get-follwing',get_following,name = 'get_following'),
 
 
     # custom url for htmml pages

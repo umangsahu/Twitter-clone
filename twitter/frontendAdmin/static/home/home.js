@@ -89,6 +89,7 @@ const userFeed = async () => {
     if (response.ok) {
         const posts = await response.json();
         posts.forEach(post => {
+            getLike(`${post.post_id}`)
             const postElement = document.createElement('div');
             postElement.classList.add('post');
             postElement.id = `post-home-${post.post_id}`
@@ -97,40 +98,41 @@ const userFeed = async () => {
             <div class="post-content-wrapper">
             <div class="post-content-upper">
                 <div class="for-profile-img">
-    
                 </div>
                 <div class="for-content">
                     <div class="post-header">
-                        ${post.username}
+                    <p class="username">${post.username}</p>
+                    
                     </div>
-                    <div class="content-wrapper" id="post-content-${post.id}">
+                    <div class="content-wrapper" >
                         ${post.content}
                     </div>
                 </div>
             </div>
             <div class="action-wrapper">
-                <div class="svg-wrapper">
+                <div class="svg-wrapper" onclick="likePost('${post.post_id}')" id="like-btn-${post.post_id}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 9v12H1V9zm4 12a2 2 0 0 1-2-2V9c0-.55.22-1.05.59-1.41L14.17 1l1.06 1.06c.27.27.44.64.44 1.05l-.03.32L14.69 8H21a2 2 0 0 1 2 2v2c0 .26-.05.5-.14.73l-3.02 7.05C19.54 20.5 18.83 21 18 21zm0-2h9.03L21 12v-2h-8.79l1.13-5.32L9 9.03z"/></svg>
+                <span id="like-btn-counter-${post.post_id}"></span>
                 </div>
-                <div class="svg-wrapper">
+                <div class="svg-wrapper" onclick='getChildPost("${post.post_id}")'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 32 32">
                         <path fill="currentColor"
                             d="M26.312 25.407s.141-.095.36-.261C29.948 22.61 32 18.938 32 14.855c0-7.62-7.161-13.808-15.995-13.808S0 7.235 0 14.855c0 7.619 7.161 13.807 15.995 13.807c1.131 0 2.26-.099 3.369-.307l.349-.057c2.245 1.452 5.516 2.651 8.38 2.651c.891 0 1.308-.729.74-1.469c-.864-1.063-2.057-2.76-2.521-4.072zm-1.948-6.032c-.952 1.423-3.911 3.849-8.337 3.849h-.063c-4.437 0-7.391-2.437-8.339-3.849a1.575 1.575 0 0 1-.365-.765a.658.658 0 0 1 .6-.703c.009-.005.015-.005.025-.005a.833.833 0 0 1 .437.151a12.185 12.185 0 0 0 7.672 2.74a11.76 11.76 0 0 0 7.683-2.745a.614.614 0 0 1 .416-.161c.355 0 .636.281.647.631a1.812 1.812 0 0 1-.36.859z" />
                     </svg>
                 </div>
-                <div class="svg-wrapper">
+                <div class="svg-wrapper" onclick="editPost('${post.post_id}')_">
                     <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 48 48">
                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                             d="m30 15l-12.1 6.07m0 5.86l12.18 6.11m12.42 2.89a6.55 6.55 0 1 1-13.1 0a6.55 6.55 0 0 1 13.1 0m-.1-23.86a6.55 6.55 0 1 1-13.1 0a6.55 6.55 0 0 1 13.1 0M18.6 24a6.55 6.55 0 1 1-13.1 0a6.55 6.55 0 0 1 13.1 0" />
                     </svg>
                 </div>
                 <div class="svg-wrapper" onclick='deletePost("${post.post_id}")'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"/></svg>
-                </div>
-                <div class="svg-wrapper" onclick='editPost("${post.post_id}")'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3"/></g></svg>
-                </div>
-                
+                <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"/></svg>
+            </div>
+            <div class="svg-wrapper" onclick='editPost("${post.post_id}")'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3"/></g></svg>
+            </div>
+
             </div> 
         </div>
         <hr>
@@ -474,32 +476,6 @@ const deletePost = async (postId) => {
     }
 }
 
-// const logOut = async () => {
-//     const csrfToken = getCookie('csrftoken');
-//     try {
-//         const res = await fetch('api/logout', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'X-CSRFToken': csrfToken
-//             }
-//         });
-//         if (res.ok) {
-//             const data = await res.json();
-
-//             if (data.status === 'ok') {
-//                 console.log(data.redirect_url);
-//                 window.location.href = data.redirect_url; // Redirect to your desired page
-//             } else {
-//                 console.error('Logout failed:', data.message);
-//             }
-//         } else {
-//             console.error('Network response was not ok.');
-//         }
-//     } catch (error) {
-//         console.error('Fetch error:', error);
-//     }
-// };
 
 const likePost = async (postId) => {
     const csrfToken = getCookie('csrftoken');
@@ -691,7 +667,7 @@ const createChildPost = async (parentPostId, content) => {
 // }
 
 async function logOut() {
-    const res = await fetch('/api/logout', {
+    const res = await fetch('api/logout', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -700,7 +676,7 @@ async function logOut() {
     const data = await res.json();
     console.log(data);
     if (data.status === 'LOGOUT') {
-        window.location.href = '/login'; // Redirect to login page after logout
+        window.location.href='login'; // Redirect to login page after logout
     }
 }
 
@@ -742,8 +718,8 @@ async function getProfile() {
                     <span class="profile-bio">hello world</span>
             </div>
             <div class="follower-container">
-                <button class="btn-follower"><span>${profileData.followers.length}</span> follower</button>
-                <button class="btn-following"><span>${profileData.following.length}</span> following</button>
+                <button class="btn-follower"><span>${profileData.followers}</span> follower</button>
+                <button class="btn-following"><span>${profileData.following}</span> following</button>
             </div>
         </div>
         <div class="profile-img-wrapper">

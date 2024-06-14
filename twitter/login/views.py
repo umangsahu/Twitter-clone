@@ -74,14 +74,10 @@ def signup_view(request):
 
 def logout_view(request):
     if request.method == 'GET':
-        # Log the user out
+ 
         logout(request)
-        
-        # Redirect to login page or send a JSON response
-        if request.is_ajax():
-            return JsonResponse({'status': 'LOGOUT', 'message': 'User logged out successfully'})
-        else:
-            return HttpResponseRedirect(reverse('login'))
+    
+        return JsonResponse({'status': 'LOGOUT', 'message': 'User logged out successfully'})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
        
@@ -140,11 +136,11 @@ def get_profile(request):
         'first_name': user.first_name,
         'last_name': user.last_name,
         'email': user.email,
-        'followers': list(followers),
-        'following': list(following),
+        'followers': len(list(followers)),
+        'following': len(list(following)),
     }
-
     return JsonResponse({'status': 'ok', 'user': user_data})
+
 
 
 # for html pages

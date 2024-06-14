@@ -61,4 +61,44 @@ def get_pending_request(request):
     ]
     
     return JsonResponse({'status': 'ok', 'pending_requests': pending_requests_data})
+
+
+
+
+    # Get following
+    # following = Relationship.objects.filter(follower=user, status=Relationship.ACCEPTED).values_list('following', flat=True)
+    # following = User.objects.filter(id__in=following).values('id', 'first_name', 'last_name', 'email')
     
+@login_required
+def get_follower(request):
+    User = get_user_model()
+    user = request.user
+
+    # Get followers
+    follower_ids = Relationship.objects.filter(following=user, status=Relationship.ACCEPTED).values_list('follower', flat=True)
+    followers = User.objects.filter(id__in=follower_ids).values('id', 'first_name', 'last_name', 'email')
+
+    # Convert the followers queryset to a list
+    followers_list = list(followers)
+
+    # Return the JSON response with followers data
+    return JsonResponse({'status': 'ok', 'followers': followers_list})
+
+
+@login_required
+def get_following(request):
+    User = get_user_model()
+    user = request.user
+
+    # # Get followers
+    # follower_ids = Relationship.objects.filter(following=user, status=Relationship.ACCEPTED).values_list('follower', flat=True)
+    # followers = User.objects.filter(id__in=follower_ids).values('id', 'first_name', 'last_name', 'email', 'created_at')
+    # followers_list = list(followers)
+
+    # Get following
+    following_ids = Relationship.objects.filter(follower=user, status=Relationship.ACCEPTED).values_list('following', flat=True)
+    following = User.objects.filter(id__in=following_ids).values('id', 'first_name', 'last_name', 'email')
+    following_list = list(following)
+
+    # Return the JSON response with both followers and following data
+    return JsonResponse({'status': 'ok', 'following': following_list})
