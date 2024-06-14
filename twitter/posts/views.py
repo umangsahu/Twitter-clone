@@ -12,27 +12,29 @@ import json
 
 # Create your views here.
 # request
-
 @login_required
 def user_posts(request):
     user = request.user
     posts = NewPost.objects.filter(user=user).order_by('-created_at')
 
-    # Serialize only the necessary fields from each post
+    # Get the profile image URL
+    profile_image_url = user.profile_image.url if user.profile_image else None
+
+    # Prepare the list to hold serialized post data
     posts_data = []
     for post in posts:
         post_data = {
             'post_id': post.id,
-            'username': f"{post.user.first_name} {post.user.last_name}",
+            'username': f"{user.first_name} {user.last_name}",
             'content': post.content,
             'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-            'likes_count': post.likes.count(),  # Assuming likes is a related manager
-            # Include other fields as needed
+            'likes_count': post.likes.count(),
+            'profile_image_url': profile_image_url,  # Include profile image URL
+            # Add other fields as needed
         }
         posts_data.append(post_data)
 
-    return JsonResponse(posts_data, safe=False)
-
+    return JsonResponse({'status': 'ok', 'posts': posts_data})
 
 @login_required
 def delete_post(request, post_id):
@@ -73,14 +75,19 @@ def edit_post(request, post_id):
 
 def get_post(request, post_id):
     post = get_object_or_404(NewPost, id=post_id)
+    
+    # Get the profile image URL of the user who posted the post
+    profile_image_url = post.user.profile_image.url if post.user.profile_image else None
+    
     post_data = {
         'post_id': post.id,
         'username': f"{post.user.first_name} {post.user.last_name}",
         'content': post.content,
         'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        'profile_image_url': profile_image_url,  # Include profile image URL
         # 'likes': post.likes,
     }
-
+    
     return JsonResponse({'status': 'ok', 'post': post_data})
 
 
@@ -100,18 +107,30 @@ def get_posts_of_following(request):
 
     # Get the posts made by the logged-in user and users they are following, ordered by created_at in reverse
     posts = NewPost.objects.filter(
-        user__in=following_ids, is_child_post=False).order_by('-created_at')
+        user__in=following_ids, is_child_post=False
+    ).order_by('-created_at')
 
-    # Prepare the response data
-    posts_data = [
-        {
+    # Prepare the response data including user's profile image
+    posts_data = []
+    for post in posts:
+
+        post_user = post.user
+        post_data = {
             'id': post.id,
-            'user_id': post.user.id,
-            'user_username': post.username,
+            'user_id': post_user.id,
+            'user_first_name': post_user.first_name,
+            'user_last_name': post_user.last_name,
             'content': post.content,
-            'created_at': post.created_at
-        } for post in posts
-    ]
+            'created_at': post.created_at,
+        }
+        # Add user profile image URL if available
+        if post_user.profile_image:
+            post_data['user_profile_image_url'] = request.build_absolute_uri(
+                post_user.profile_image.url)
+        else:
+            post_data['user_profile_image_url'] = None
+
+        posts_data.append(post_data)
 
     return JsonResponse({'status': 'ok', 'posts': posts_data})
 
@@ -133,10 +152,12 @@ def get_child_post(request, parent_post_id):
             'content': post.content,
             'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S'),
             'likes': post.likes.count(),  # Get the count of likes
+            'profile_image_url': post.user.profile_image.url if post.user.profile_image else None  # Include profile image URL
         } for post in child_posts
     ]
 
     return JsonResponse({'status': 'ok', 'child_posts': child_posts_data})
+
 
 
 # pages

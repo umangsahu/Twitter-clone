@@ -17,7 +17,10 @@ const getConnections = async (tab) => {
             followerDiv.classList.add("friend-list");
             followerDiv.innerHTML = `            
             <div class="profile-section" >
-                <div class="profile-img">img</div> 
+            <div class="profile-img">
+
+            <img src="/media/${follower.profile_image}" alt="userImg">
+            </div> 
                 <div class="user-info">${follower.first_name} ${follower.last_name}</div>
             </div >
             <div class="button-wrapper">

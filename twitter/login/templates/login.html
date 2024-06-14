@@ -20,6 +20,16 @@
     <a href='{% url "signup_page" %}'>Signup</a>
 </div>
 
+{% if request.user.is_authenticated %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    
+            window.location.href = '/';
+            console.log("Redirecting to homepage...");
+
+    });
+</script>
+{% endif %}
 <script>
     function getCookie(name) {
         let cookieValue = null;
@@ -35,12 +45,18 @@
         }
         return cookieValue;
     }
+    document.addEventListener('DOMContentLoaded', () => {
+    const csrfToken = localStorage.getItem('csrftoken');
+    if (csrfToken.length > 0) {
+        window.location.href = '/';
+        console.log("Redirecting to homepage...");
+    }
+});
 
     document.getElementById('login-form').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent the form from submitting the traditional way
 
         const csrfToken = getCookie('csrftoken');
-        console.log('CSRF Token:', csrfToken);
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
@@ -60,11 +76,12 @@
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
+
             return response.json();
         })
         .then(data => {
             if (data.status === 'success') {
-                alert('Login successful');
+                // alert('Login successful');
                 window.location.href = '/'; // Redirect to home page or dashboard
             } else {
                 alert('Error: ' + data.message);

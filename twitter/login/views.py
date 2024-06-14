@@ -161,21 +161,18 @@ def update_profile(request):
         data = json.loads(request.body)
 
         first_name = data.get('first_name')
-        # last_name = data.get('last_name')
+        last_name = data.get('last_name')
         bio = data.get('bio')
         image_data = data.get('image')
 
         if first_name:
             user.first_name = first_name
-        # # if last_name:
-        # #     user.last_name = last_name
+        if last_name:
+            user.last_name = last_name
         if bio:
             user.bio = bio
-        
         if image_data:
             user.profile_image = image_data
-            
-        print(user.bio,user.first_name)
 
         if image_data:
             format, imgstr = image_data.split(';base64,')

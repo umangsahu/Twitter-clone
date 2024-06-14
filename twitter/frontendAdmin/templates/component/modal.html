@@ -29,13 +29,14 @@
     <!-- for edit -post -->
     <div class="modal-content" id="edit-post">
         <form action="" id="edit-post-form">
-            <textarea name="" rows='10' id="edit-post-content" maxlength="400"
-                placeholder="made mistake!"></textarea>
+
+            <textarea name="" rows="10" id="edit-post-content" maxlength="400" placeholder="made mistake!"
+                style="width: 100%;background: transparent;color: white;border: none;"></textarea>
             <div class="post-form-button-wrapper">
                 <span id="word-counter"></span>
                 <button id="post-submit-btn" type="submit">Post <svg xmlns="http://www.w3.org/2000/svg" width="1em"
                         height="1em" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M10 8.64L15.27 12L10 15.36zM8 5v14l11-7z" />
+                        <path fill="currentColor" d="M10 8.64L15.27 12L10 15.36zM8 5v14l11-7z"></path>
                     </svg>
                 </button>
             </div>
@@ -45,18 +46,28 @@
 
     <!-- edit profile -->
     <div class="modal-content" id="edit-profile">
+
+        
+        <img id="profile-image-preview" src="" alt="Profile Image" />
+
         <form id="edit-profile-form" enctype="multipart/form-data">
-            <div class="edit-input-wrapper">
-                <label for="profile-image">Profile Image</label>
-                <input type="file" id="profile-image" name="image" accept="image/*">
+            <div class="img">
+                <label for="profile-image">
+                    <input type="file" id="profile-image" name="image" accept="image/*">
+                </label>
             </div>
             <div class="edit-input-wrapper">
-                <label for="profile-name">Name</label>
-                <input type="text" id="profile-name" name="first_name" placeholder="Your name...">
+                <label for="profile-first-name">First Name<label>
+                        <input type="text" id="profile-first-name" name="profile-first-name" placeholder="Your name...">
+            </div>
+            <div class="edit-input-wrapper">
+                <label for="profile-last-name">Last Name</label>
+                <input type="text" id="profile-last-name" name="profile-last-name" placeholder="Your name...">
             </div>
             <div class="edit-input-wrapper">
                 <label for="profile-bio">Bio</label>
-                <textarea id="profile-bio" name="bio" rows="4" maxlength="200" placeholder="Tell us about yourself..."></textarea>
+                <textarea id="profile-bio" name="bio" rows="4" maxlength="200"
+                    placeholder="Tell us about yourself..."></textarea>
             </div>
             <div class="post-form-button-wrapper">
                 <button id="profile-submit-btn" type="submit">Save Profile

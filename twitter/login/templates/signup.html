@@ -61,8 +61,23 @@
 <p>Already have an account?</p>
 <div class="anchor-wrapper">
     <a href='{% url "login_page" %}'>login</a>
+
 </div>
+
+{% if request.user.is_authenticated %}
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    
+            window.location.href = '/';
+            console.log("Redirecting to homepage...");
+
+    });
+</script>
+{% endif %}
+<script>
+
+
+
     document.getElementById('signup-form').addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the form from submitting the traditional way
         const formData = {
@@ -90,8 +105,8 @@
             .then(data => {
                 if (data.success) {
                     // Redirect or show success message
-                    // window.location.href = data.redirect_url;
-                    console.log("success");
+                    window.location.href = 'login'
+
                 } else {
                     // Show error message
                     console.error('Error:', data.error);

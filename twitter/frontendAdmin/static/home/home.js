@@ -88,7 +88,8 @@ const userFeed = async () => {
     // console.log(response);
     if (response.ok) {
         const posts = await response.json();
-        posts.forEach(post => {
+        posts.posts.forEach(post => {
+            console.log(post);
             getLike(`${post.post_id}`)
             const postElement = document.createElement('div');
             postElement.classList.add('post');
@@ -97,8 +98,9 @@ const userFeed = async () => {
             
             <div class="post-content-wrapper">
             <div class="post-content-upper">
-                <div class="for-profile-img">
-                </div>
+            <div class="for-profile-img">
+            <img src="${post.profile_image_url?post.profile_image_url:'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/corporate-user-icon.png'}">
+            </div>
                 <div class="for-content">
                     <div class="post-header">
                     <p class="username">${post.username}</p>
@@ -171,10 +173,11 @@ const usersFriendsFeed = async () => {
             <div class="post-content-wrapper">
             <div class="post-content-upper">
                 <div class="for-profile-img">
+                <img src="${post.user_profile_image_url?post.user_profile_image_url:'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/corporate-user-icon.png'}">
                 </div>
                 <div class="for-content">
                     <div class="post-header">
-                    <p class="username">${post.user_username}</p>
+                    <p class="username">${post.user_first_name} ${post.user_last_name}</p>
                         <p class="date">${formattedDate}</p>
                     </div>
                     <div class="content-wrapper" >
@@ -543,7 +546,9 @@ const getChildPost = async (postId, isOpenWithChild = false) => {
 
     parentPostContainer.innerHTML = `
     <div class="parent-content-wrapper">
-            <div class="profile-image">img</div>
+            <div class="profile-image">
+            <img src="${getPost.profile_image_url}">
+            </div>
             <div class="post-content">
                 <div class="post-header">
                     <p class="username">${getPost.username}</p>
@@ -603,7 +608,8 @@ const getChildPost = async (postId, isOpenWithChild = false) => {
         postElement.innerHTML = `
             <div class="post-content-wrapper">
             <div class="post-content-upper">
-                <div class="for-profile-img">
+                <div class="for-profile-img" style="width:50px;">
+                <img src="${childPost.profile_image_url}" style="width:100%; aspect-ratio:1/1; border-radius:50%; object-fit:cover;">
                 </div>
                 <div class="for-content">
                     <div class="post-header">
