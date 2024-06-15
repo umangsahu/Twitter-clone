@@ -94,7 +94,7 @@ DATABASES = {
     #     'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
     #     'HOST': 'localhost',
     # }
-    'default': {
+      'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': str(BASE_DIR / 'db.sqlite3'),
     }
