@@ -21,13 +21,16 @@ def create_post_in_db(request):
             data = json.loads(request.body)
             content = data.get('post')
             user = request.user
+            print(content)
             if not content:
                 return JsonResponse({'success': False, 'error': 'Content cannot be empty'}, status=400)
 
             # Ensure we are using the UserData instance
             user_data = UserData.objects.get(pk=user.pk)
+            
             # post = Post.objects.create(user=, content=content)
             new_post = NewPost.objects.create(user=user_data, content=content)
+            print(new_post,"lhelooc")
             return JsonResponse({'success': True, 'message': 'Post created successfully'})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
