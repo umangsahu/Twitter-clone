@@ -175,7 +175,7 @@
     align-items: center;
     justify-content: space-between;
     text-transform: capitalize;
-    
+
 }
 
 .main .hero-section .feed-wrapper .feed-header .feed-header-box {
@@ -204,6 +204,7 @@
 .main .hero-section .feed-wrapper .post {
     width: 100%;
 }
+
 /* .main .hero-section .feed-wrapper .post  .post-header{
     width: 100%;
     background: red;
@@ -219,16 +220,24 @@
 
 .main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper {
     display: flex;
+    gap: 10px;
 }
 
 .main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper .for-profile-img {
-    width: 30px;
+    width: 50px;
+
+    & img {
+        width: 100%;
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+    }
 }
+
 .main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper .for-content {
     width: 100%;
 }
 
-.main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper .for-content .post-header{
+.main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper .for-content .post-header {
     /* background: red; */
     width: 100%;
     padding: 5px;
@@ -237,17 +246,19 @@
     /* flex-direction: column; */
     justify-content: space-between;
     align-items: flex-end;
-    
-    
+
+
 }
-.main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper .for-content .post-header{
+
+.main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper .for-content .post-header {
 
     padding: 5px;
     font-size: 1.5rem;
     text-transform: capitalize;
 
 }
-.main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper .for-content .post-header .date{
+
+.main .hero-section .feed-wrapper .post .post-content-wrapper .post-content-upper .for-content .post-header .date {
     /* background: red; */
     padding: 5px;
     font-size: 0.7rem;
@@ -263,7 +274,7 @@
 }
 
 .main .modal-wrapper {
-    position: absolute;
+    position: fixed;
     z-index: 3;
     top: 0;
     background-color: var(--twitter-blue-opaq);
@@ -274,7 +285,7 @@
     justify-content: center;
 }
 
-.main  .modal-wrapper .modal-container {
+.main .modal-wrapper .modal-container {
     min-height: 400px;
     background: black;
     width: 500px;
@@ -282,23 +293,23 @@
     border-radius: 20px;
 }
 
-.main  .modal-wrapper .modal-container .modal-header {
+.main .modal-wrapper .modal-container .modal-header {
     color: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.main  .modal-wrapper .modal-container .modal-header h3 {
+.main .modal-wrapper .modal-container .modal-header h3 {
     font-size: 1.8rem;
 }
 
-.main  .modal-wrapper .modal-container .modal-content {
+.main .modal-wrapper .modal-container .modal-content {
     padding: 10px;
     height: 100%;
 }
 
-.main .modal-wrapper .modal-container .modal-content form #new-post-content{
+.main .modal-wrapper .modal-container .modal-content form #new-post-content {
     height: auto;
     background: transparent;
     border: none;
@@ -309,7 +320,7 @@
     resize: none;
 }
 
-.main  .modal-wrapper .modal-container .modal-content form #new-post-content:focus{
+.main .modal-wrapper .modal-container .modal-content form #new-post-content:focus {
     border: none;
     outline: none;
 }
@@ -320,13 +331,13 @@
     align-items: center;
 }
 
-.main  .modal-wrapper .modal-container .modal-content form .post-form-button-wrapper #word-counter {
+.main .modal-wrapper .modal-container .modal-content form .post-form-button-wrapper #word-counter {
     font-size: 0.7rem;
     font-weight: 0.4rem;
     color: white;
 }
 
-.main  .modal-wrapper .modal-container .modal-content form .post-form-button-wrapper #post-submit-btn {
+.main .modal-wrapper .modal-container .modal-content form .post-form-button-wrapper #post-submit-btn {
     color: white;
     background: var(--twitter-blue);
     display: flex;
@@ -341,3 +352,141 @@
 
 /* replies section */
 
+
+@media (max-width:960px) {
+
+    .main {
+        width: 100%;
+        background: #000;
+    }
+
+    .main .hero-section {
+        display: flex;
+        max-width: 100%;
+        margin: auto;
+        min-height: 100vh;
+        flex-direction: column;
+    }
+
+    .main .hero-section .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        width: 100%;
+        padding: 1.3rem;
+        height: fit-content;
+        background: #000;
+        order: 1;
+        bottom: 0;
+    }
+
+    .main .hero-section .navbar .logo-container {
+        display: none;
+    }
+
+    .main .hero-section .navbar ul {
+        font-size: 1.3rem;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
+
+    .main .hero-section .navbar ul .box {
+        display: inline;
+        color: white;
+        cursor: pointer;
+    }
+
+    .main .hero-section .navbar ul .box span {
+        background-color: transparent;
+        transition: all 0.3s ease;
+        border-radius: 0;
+        padding: 10px;
+    }
+
+    .main .hero-section .navbar ul .box span:hover {
+        display: inline;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .main .hero-section .navbar ul .box5 a {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        text-align: center;
+        font-weight: 400;
+        padding: 5px 20px;
+        font-size: 1.2rem;
+        border-radius: 30px;
+        background: var(--twitter-blue);
+        color: white;
+        cursor: pointer;
+    }
+
+    .main .hero-section .navbar .profile {
+        color: white;
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .main .hero-section .navbar .profile .dp {
+        width: 60px;
+    }
+
+    .main .hero-section .navbar .profile .dp img {
+        width: 100%;
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+        object-fit: contain;
+        background: white;
+        object-position: center;
+    }
+
+    .main .hero-section .navbar .profile .profile-info-wrapper {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .main .hero-section .navbar .profile .profile-info-wrapper .profile-info-header {
+        color: white;
+        font-weight: 800;
+        font-size: 1.2rem;
+
+    }
+
+    .main .hero-section .navbar .profile .profile-info-wrapper .button-wrapper {
+        padding: 10px 0;
+        display: flex;
+        gap: 10px;
+    }
+
+    .main .hero-section .navbar .profile .profile-info-wrapper .button-wrapper a {
+        display: block;
+        text-align: center;
+        color: white;
+        font-weight: 400;
+        gap: 10px;
+        text-decoration: none;
+        padding: 5px 10px;
+        font-size: 0.9rem;
+        border-radius: 5px;
+    }
+
+    .main .hero-section .navbar .profile .profile-info-wrapper .button-wrapper a.btn-profile {
+        background: transparent;
+        color: var(--twitter-blue);
+        border: 1.5px solid var(--twitter-blue);
+    }
+
+    .main .hero-section .navbar .profile .profile-info-wrapper .button-wrapper a.btn-profile:hover {
+        background: var(--twitter-blue);
+        color: white;
+    }
+
+}

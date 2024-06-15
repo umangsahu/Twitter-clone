@@ -29,6 +29,8 @@ class UserData(AbstractBaseUser, PermissionsMixin):
     mobile_no = models.CharField(max_length=10)
     email = models.EmailField(unique=True)
     password = models.TextField()
+    bio = models.TextField(blank=True, null=True)  # Add bio field
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)  # Add profile_image field
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
